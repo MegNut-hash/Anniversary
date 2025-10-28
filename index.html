@@ -3,13 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>A Question for You...</title>
+    <title>Our Love Story - Time, Tides & Memories</title>
+    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Nunito:wght@400;600&display=swap" rel="stylesheet">
     <style>
-        /* Gradient Animation (same as before) */
+        /* Gradient Animation */
         @keyframes gradient-animation {
             0% { background-position: 0% 50%; }
             50% { background-position: 100% 50%; }
@@ -21,256 +23,411 @@
             background: linear-gradient(-45deg, #fff0f5, #ffe4e1, #fff8f8, #fce7f3);
             background-size: 400% 400%;
             animation: gradient-animation 20s ease infinite;
-            overflow: hidden; /* Hide scrollbars for this simple page */
+            overflow-x: hidden;
             position: relative;
-            display: flex; /* Center content */
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            padding: 1rem;
         }
         .title-font {
             font-family: 'Dancing Script', cursive;
         }
 
-        /* Floating Hearts (same as before) */
+        /* Floating Hearts */
         @keyframes fall {
             0% { transform: translateY(-10vh) rotate(0deg); opacity: 1; }
             100% { transform: translateY(110vh) rotate(360deg); opacity: 0; }
         }
         .heart {
-            position: fixed;
-            top: 0;
-            color: #F472B6;
-            animation: fall 10s linear infinite;
-            font-size: 24px;
-            pointer-events: none;
-            z-index: 1; /* Below content */
+            position: fixed; top: 0; color: #F472B6; animation: fall 10s linear infinite; font-size: 24px; pointer-events: none; z-index: 9999;
         }
 
-        /* Confetti (same as before) */
-        @keyframes confetti-fall {
-            0% { transform: translateY(-100%) rotateZ(0deg); opacity: 1; }
-            100% { transform: translateY(100vh) rotateZ(720deg); opacity: 0; }
-        }
-        .confetti {
-            position: fixed;
-            top: -20px;
-            width: 10px;
-            height: 10px;
-            background-color: #fca5a5;
-            animation: confetti-fall var(--duration) linear infinite;
-            border-radius: 50%;
-            pointer-events: none;
-            z-index: 1;
-        }
+        /* Moon Feature */
+        .moon-date-input { border: 2px solid #FBCFE8; padding: 0.5rem 1rem; border-radius: 99px; font-family: 'Nunito', sans-serif; color: #DB2777; outline: none; transition: all 0.3s; }
+        .moon-date-input:focus { border-color: #F472B6; box-shadow: 0 0 10px #FBCFE8; }
+        .moon-date-input::-webkit-calendar-picker-indicator { cursor: pointer; filter: invert(50%) sepia(50%) saturate(5000%) hue-rotate(300deg); }
+
+        /* Polaroid Grid */
+        .polaroid { background: white; padding: 1rem; padding-bottom: 3.5rem; box-shadow: 0 4px 8px rgba(0,0,0,0.08); transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out; position: relative; break-inside: avoid; margin-bottom: 1.5rem; border-radius: 4px; }
+        .polaroid:hover { transform: scale(1.05); box-shadow: 0 10px 20px rgba(0,0,0,0.15); z-index: 10; }
+        .polaroid img { width: 100%; height: auto; object-fit: cover; border-radius: 2px; border: 1px solid #fce7f3; }
+        .polaroid-caption { position: absolute; bottom: 0.75rem; left: 1rem; right: 1rem; text-align: center; font-family: 'Dancing Script', cursive; font-size: 1.5rem; color: #E11D48; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+
+        /* Confetti */
+        @keyframes confetti-fall { 0% { transform: translateY(-100%) rotateZ(0deg); opacity: 1; } 100% { transform: translateY(100vh) rotateZ(720deg); opacity: 0; } }
+        .confetti { position: fixed; top: -20px; width: 10px; height: 10px; background-color: #fca5a5; animation: confetti-fall var(--duration) linear infinite; border-radius: 50%; pointer-events: none; z-index: 1000; }
         .confetti.square { border-radius: 0; background-color: #fda4af; }
         .confetti.triangle { width: 0; height: 0; border-left: 5px solid transparent; border-right: 5px solid transparent; border-bottom: 10px solid #fb7185; background-color: transparent; }
 
-        /* Sparkles (same as before) */
-        @keyframes twinkle {
-            0% { opacity: 0.5; transform: scale(1); }
-            50% { opacity: 1; transform: scale(1.2); }
-            100% { opacity: 0.5; transform: scale(1); }
-        }
-        .sparkle {
+        /* Sparkles */
+        @keyframes twinkle { 0% { opacity: 0.5; transform: scale(1); } 50% { opacity: 1; transform: scale(1.2); } 100% { opacity: 0.5; transform: scale(1); } }
+        .sparkle { position: fixed; background: rgba(255, 255, 255, 0.8); border-radius: 50%; pointer-events: none; box-shadow: 0 0 5px 3px rgba(255, 255, 255, 0.6); animation: twinkle var(--sparkle-duration) ease-in-out infinite; z-index: 100; }
+
+        /* Love Letter Modal */
+        #love-letter-modal { transition: opacity 0.3s ease-in-out, visibility 0.3s ease-in-out; }
+        .modal-overlay { background-color: rgba(0, 0, 0, 0.6); backdrop-filter: blur(5px); transition: opacity 0.3s ease-in-out; }
+        .modal-content { background: linear-gradient(145deg, #fff8f8, #fff0f5); border: 2px solid #fbcfe8; transform: scale(0.95); opacity: 0; transition: transform 0.3s ease-out, opacity 0.3s ease-out; }
+        #love-letter-modal:not(.hidden) .modal-content, #video-modal:not(.hidden) .modal-content { transform: scale(1); opacity: 1; } /* Combined rule */
+        .modal-close-btn { background-color: #fce7f3; color: #db2777; border-radius: 50%; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; font-size: 24px; font-weight: bold; transition: all 0.2s ease-in-out; }
+        .modal-close-btn:hover { background-color: #fbcfe8; transform: rotate(90deg) scale(1.1); }
+        .letter-text { line-height: 1.75; color: #be185d; }
+        .letter-text::first-letter { font-family: 'Dancing Script', cursive; font-size: 3.5rem; color: #e11d48; float: left; line-height: 1; margin-right: 0.5rem; margin-top: 0.25rem; }
+
+        /* Bucket List */
+        .bucket-list li { position: relative; padding-left: 2.5rem; font-size: 1.125rem; padding-bottom: 1rem; color: #831843; }
+        .bucket-list li::before { content: '♡'; position: absolute; left: 0; top: 0; font-family: 'Dancing Script', cursive; color: #e11d48; font-size: 1.75rem; line-height: 1; }
+
+        /* Timeline */
+        .timeline-container { position: relative; padding-left: 2rem; }
+        .timeline-container::before { content: ''; position: absolute; left: 10px; top: 10px; bottom: 10px; width: 4px; background: #fbcfe8; border-radius: 2px; }
+        .timeline-item { position: relative; margin-bottom: 1.5rem; }
+        .timeline-item:last-child { margin-bottom: 0; }
+        .timeline-dot { position: absolute; left: -1px; top: 8px; width: 16px; height: 16px; background: #e11d48; border: 3px solid white; border-radius: 50%; z-index: 10; }
+        .timeline-content { background: #fff8f8; padding: 0.75rem 1rem; border-radius: 8px; border: 1px solid #fce7f3; }
+        .timeline-date { font-size: 0.875rem; font-weight: 600; color: #db2777; }
+        .timeline-title { font-size: 1.25rem; font-family: 'Dancing Script', cursive; color: #831843; margin-top: 0.25rem; }
+        .timeline-desc { font-size: 0.875rem; color: #be185d; margin-top: 0.25rem; }
+
+        /* Little Things Counter */
+        .counter-item { display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; background: #fff8f8; padding: 1rem; border-radius: 12px; border: 1px solid #fce7f3; box-shadow: 0 4px 8px rgba(0,0,0,0.05); }
+        .counter-number { font-family: 'Dancing Script', cursive; font-size: 2.5rem; color: #e11d48; line-height: 1.1; word-break: break-word; hyphens: auto; }
+        .counter-label { font-size: 0.875rem; color: #831843; margin-top: 0.25rem; }
+
+        /* Anniversary Message GIF */
+        @keyframes pulse-grow { 0% { transform: scale(1); } 50% { transform: scale(1.05); } 100% { transform: scale(1); } }
+        #anniversary-message { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 0.5rem; margin-top: 3rem; text-align: center; padding: 1.5rem; background: linear-gradient(45deg, #fff0f5, #ffe4e1); border-radius: 20px; box-shadow: 0 8px 16px rgba(236, 72, 153, 0.2); max-width: fit-content; margin-left: auto; margin-right: auto; border: 2px solid #fbcfe8; animation: pulse-grow 2s infinite ease-in-out; }
+        #anniversary-message img { width: 80px; height: auto; }
+        #anniversary-message p { font-family: 'Dancing Script', cursive; font-size: 2.25rem; color: #E11D48; line-height: 1.2; }
+
+        /* Special Place Map */
+        #special-place-map iframe { border-radius: 12px; border: 2px solid #fbcfe8; box-shadow: 0 4px 8px rgba(0,0,0,0.1); width: 100%; aspect-ratio: 16 / 9; max-width: 600px; margin-left: auto; margin-right: auto; }
+
+        /* --- NEW VIDEO DUCK CSS --- */
+        #video-duck-container {
             position: fixed;
-            background: rgba(255, 255, 255, 0.8);
-            border-radius: 50%;
-            pointer-events: none;
-            box-shadow: 0 0 5px 3px rgba(255, 255, 255, 0.6);
-            animation: twinkle var(--sparkle-duration) ease-in-out infinite;
-            z-index: 1;
-        }
-
-        /* Content Styling */
-        .content-box {
-            background: rgba(255, 255, 255, 0.8);
-            backdrop-filter: blur(8px);
-            padding: 2.5rem 2rem;
-            border-radius: 20px;
-            box-shadow: 0 10px 25px rgba(236, 72, 153, 0.2);
-            border: 2px solid #fbcfe8;
-            text-align: center;
-            max-width: 90%;
-            width: 450px;
-            position: relative;
-            z-index: 10; /* Above animations */
-        }
-
-        .question-text {
-            font-family: 'Dancing Script', cursive;
-            font-size: 2.5rem; /* text-4xl */
-            color: #E11D48; /* Hot pink */
-            margin-bottom: 1rem; /* Reduced margin */
-            line-height: 1.3;
-        }
-
-        /* GIF Styling */
-        .added-gif {
-            max-width: 150px; /* Control gif size */
-            height: auto;
-            margin: 0 auto 1.5rem auto; /* Center and add bottom margin */
-            border-radius: 10px; /* Optional: slightly rounded corners */
-            display: block; /* Ensure it behaves like a block element for margin auto */
-        }
-
-        .button-container {
-            display: flex;
-            justify-content: center;
-            gap: 1rem; /* Space between buttons */
-            flex-wrap: wrap; /* Allow wrapping on small screens */
-        }
-
-        .styled-button {
-            font-family: 'Nunito', sans-serif;
-            font-weight: 600;
-            padding: 0.75rem 1.75rem; /* Base padding */
-            border-radius: 99px; /* Pill shape */
+            bottom: 1.5rem; /* 24px */
+            right: 1.5rem; /* 24px */
+            z-index: 50; /* Above content, below modals */
             cursor: pointer;
-            transition: all 0.3s ease-in-out; /* Standard transitions */
-            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-            font-size: 1.125rem; /* Base font size */
-            border: none;
-            position: relative;
-            z-index: 11;
+            text-align: center;
+            transition: transform 0.3s ease-in-out;
         }
-
-        .yes-button {
+        #video-duck-container:hover {
+            transform: scale(1.1);
+        }
+        .duck-banner {
             background-color: #f472b6; /* Pink */
             color: white;
+            padding: 0.25rem 0.75rem;
+            border-radius: 6px;
+            font-size: 0.75rem; /* 12px */
+            font-weight: 600;
+            font-family: 'Nunito', sans-serif;
+            margin-bottom: 0.25rem;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            display: inline-block; /* Fit content */
         }
-        .yes-button:hover {
-            background-color: #ec4899; /* Darker pink */
-            transform: scale(1.05);
+        .duck-svg {
+            width: 60px; /* Adjust size as needed */
+            height: auto;
+            filter: drop-shadow(0 4px 6px rgba(0,0,0,0.1));
         }
-        /* Removed .cover-page styles */
 
-        .no-button {
-            background-color: #fde6f4; /* Very light pink */
-            color: #db2777; /* Dark pink text */
-             transition: opacity 0.3s ease-out, transform 0.3s ease-in-out; /* Add opacity transition */
+        /* Video Modal Styles (similar to letter modal) */
+        #video-modal {
+            transition: opacity 0.3s ease-in-out, visibility 0.3s ease-in-out;
+            /* Inherits .modal-overlay from love letter */
+            /* Inherits .modal-content transitions from love letter */
         }
-        .no-button:hover {
-            background-color: #fbcfe8; /* Light pink */
-            transform: scale(1.05);
+        .video-modal-content {
+            /* Inherits base styles from .modal-content via classList */
+            width: 90%;
+            max-width: 800px; /* Adjust max width for video */
+            padding: 1rem; /* Less padding for video */
+            background: #fff8f8; /* Slightly different background */
         }
-        .no-button.hidden {
-            /* Keep simple hide logic */
-             opacity: 0;
-             pointer-events: none;
-             /* Removed transform scale */
+        .video-player-wrapper {
+            position: relative;
+            padding-bottom: 56.25%; /* 16:9 Aspect Ratio */
+            height: 0;
+            overflow: hidden;
+            border-radius: 10px; /* Rounded corners for player */
+            border: 2px solid #fbcfe8;
+        }
+        .video-player-wrapper iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+        /* Close button positioned inside video content */
+        .video-modal-content .modal-close-btn {
+            top: -15px; /* Adjust position relative to content box */
+            right: -15px;
+            z-index: 150; /* Above video player */
         }
 
     </style>
 </head>
-<body>
+<body class="text-gray-700">
 
-    <!-- Container for floating elements -->
-    <div id="animation-container" class="absolute inset-0 overflow-hidden pointer-events-none"></div>
+    <!-- Container for floating elements --><div id="animation-container" class="absolute inset-0 overflow-hidden pointer-events-none"></div>
 
-    <!-- Main Content Box -->
-    <div class="content-box">
-        <h1 class="question-text">Will you spend forever making memories with me? ♡</h1>
+    <!-- Heart Icon for SVG use --><svg class="hidden">
+        <symbol id="icon-heart" viewBox="0 0 24 24"> <path fill="currentColor" d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/> </symbol>
+    </svg>
 
-        <!-- GIF -->
-        <img src="https://i.postimg.cc/pdsDjfyx/cute-bears-love.gif" alt="Cute Bears Love GIF" class="added-gif" width="150">
+    <div class="container mx-auto px-4 py-8 md:py-12 relative z-10">
 
-        <div class="button-container">
-            <button id="yes-button" class="styled-button yes-button">Yes!</button>
-            <button id="no-button" class="styled-button no-button">No</button>
+        <header class="text-center mb-10">
+            <h1 class="title-font text-5xl md:text-7xl text-pink-500">Our Love Story</h1>
+            <p class="text-lg text-gray-500 mt-2">Time, Tides & Memories</p>
+
+            <!-- Time Together Counter --><div class="mt-8"> <p class="text-lg text-gray-600">Our time together:</p> <h2 id="love-timer" class="text-3xl md:text-4xl font-semibold text-pink-600 mt-1" style="font-family: 'Nunito', sans-serif;"> Loading... </h2> </div>
+
+            <!-- Love Letter Button --><div class="mt-8"> <button id="open-letter-btn" class="inline-flex items-center gap-3 bg-pink-500 text-white font-semibold px-8 py-3 rounded-full cursor-pointer shadow-lg hover:bg-pink-600 transition-all duration-300 transform hover:scale-105"> <svg class="w-6 h-6 animate-pulse"><use xlink:href="#icon-heart"></use></svg> <span>A Letter For My Love</span> </button> </div>
+        </header>
+
+        <!-- Moon Phase Feature --><section class="text-center mb-12 flex flex-col justify-center items-center gap-6 bg-white/70 backdrop-blur-sm p-8 rounded-2xl shadow-lg border border-pink-100">
+             <h3 class="title-font text-3xl text-pink-500">Moon Phase Finder</h3> <p class="text-gray-600">Compare moon phases for two different dates!</p>
+             <div class="grid grid-cols-1 md:grid-cols-2 gap-8 w-full max-w-2xl">
+                 <div class="flex flex-col items-center gap-2"> <label for="moon-date-input-1" class="text-lg text-gray-700">Date 1:</label> <input type="date" id="moon-date-input-1" class="moon-date-input"> <div id="moon-result-1" class="mt-2 text-center h-28"></div> </div>
+                 <div class="flex flex-col items-center gap-2"> <label for="moon-date-input-2" class="text-lg text-gray-700">Date 2:</label> <input type="date" id="moon-date-input-2" class="moon-date-input"> <div id="moon-result-2" class="mt-2 text-center h-28"></div> </div>
+             </div>
+             <button id="moon-check-btn" class="inline-flex items-center gap-3 bg-pink-400 text-white font-semibold px-8 py-3 rounded-full cursor-pointer shadow-lg hover:bg-pink-500 transition-all duration-300 transform hover:scale-105"> <svg class="w-6 h-6"><use xlink:href="#icon-heart"></use></svg> <span>Check Moon Phases</span> </button>
+        </section>
+
+        <!-- Bucket List --><section class="mb-12 flex flex-col justify-center items-center gap-6 bg-white/70 backdrop-blur-sm p-8 rounded-2xl shadow-lg border border-pink-100">
+             <h3 class="title-font text-3xl text-pink-500">Our Next Adventures</h3> <p class="text-gray-600">A few things I can't wait to do with you...</p>
+             <ul class="bucket-list mt-4 text-left max-w-md w-full">
+                 <li>Go on a date in Hayes without being in fear of being spotted</li>
+                 <li>Try to cook together, and when i get food posioning, watch you cook.</li>
+                 <li>Go to a new country together, basically anywhere but sri lanka</li>
+                 <li>Go shopping together.</li>
+                 <li>Go back to the fields for nostalgia.</li>
+                 <li>Boing Boing Boing 😏.</li>
+             </ul>
+        </section>
+
+        <!-- Timeline --><section id="love-timeline" class="mb-12 flex flex-col justify-center items-center gap-6 bg-white/70 backdrop-blur-sm p-8 rounded-2xl shadow-lg border border-pink-100">
+            <h3 class="title-font text-3xl text-pink-500">A Timeline of Our Love</h3>
+            <div class="timeline-container mt-4 w-full max-w-md">
+                <div class="timeline-item"> <div class="timeline-dot"></div> <div class="timeline-content"> <p class="timeline-date">November 20, 2024</p> <h4 class="timeline-title">Our Story Began</h4> <p class="timeline-desc">The day it all started... ❤️</p> </div> </div>
+                <div class="timeline-item"> <div class="timeline-dot"></div> <div class="timeline-content"> <p class="timeline-date">November 21, 2024</p> <h4 class="timeline-title">MY 18TH Birthday!!1</h4> <p class="timeline-desc">The day i became a pedo.. ❤️</p> </div> </div>
+                <div class="timeline-item"> <div class="timeline-dot"></div> <div class="timeline-content"> <p class="timeline-date">April 11, 2025</p> <h4 class="timeline-title">MY LIL SHEILASS 18th</h4> <p class="timeline-desc">MY LIL ADULT PRO MAX AWW! ❤️</p> </div> </div>
+                <div class="timeline-item"> <div class="timeline-dot"></div> <div class="timeline-content"> <p class="timeline-date">June 24, 2025</p> <h4 class="timeline-title">PROM!</h4> <p class="timeline-desc">That unforgettable night.</p> </div> </div>
+                <div class="timeline-item"> <div class="timeline-dot"></div> <div class="timeline-content"> <p class="timeline-date">May 20 2025</p> <h4 class="timeline-title">OUR 6 MONTHS!</h4> <p class="timeline-desc">Thats when it clicked!</p> </div> </div>
+                <div class="timeline-item"> <div class="timeline-dot"></div> <div class="timeline-content"> <p class="timeline-date">November 20, 2025</p> <h4 class="timeline-title">Our 1 Year Anniversary</h4> <p class="timeline-desc">And so many more to come!</p> </div> </div>
+            </div>
+        </section>
+
+        <!-- Little Things Counter --><section id="little-things" class="mb-12 flex flex-col justify-center items-center gap-6 bg-white/70 backdrop-blur-sm p-8 rounded-2xl shadow-lg border border-pink-100">
+             <h3 class="title-font text-3xl text-pink-500">Just a Few Little Things...</h3>
+             <div class="grid grid-cols-2 md:grid-cols-4 gap-6 mt-4 w-full max-w-lg">
+                 <div class="counter-item"> <span class="counter-number">1, for now enthirun was too funny</span> <span class="counter-label">Movies Watched</span> </div>
+                 <div class="counter-item"> <span class="counter-number">Not enough</span> <span class="counter-label">Buldak Shared</span> </div>
+                 <div class="counter-item"> <span class="counter-number">1, but more incoming</span> <span class="counter-label">Stolen Hoodies 😉</span> </div>
+                 <div class="counter-item"> <span class="counter-number">∞</span> <span class="counter-label">Laughs & Smiles</span> </div>
+                 <div class="counter-item"> <span class="counter-number">∞</span> <span class="counter-label">"Just say you hate me" said</span> </div>
+                 <div class="counter-item"> <span class="counter-number">ฅ˙Ⱉ˙ฅ rawr!</span> <span class="counter-label">GRRRRRRR</span> </div>
+                 <div class="counter-item"> <span class="counter-number">0 🥺</span> <span class="counter-label">Amount of times i have been invited to any events at auntys house</span> </div>
+                 <div class="counter-item"> <span class="counter-number">Not enough</span> <span class="counter-label">Phone calls</span> </div>
+             </div>
+        </section>
+
+        <!-- Special Place Map --><section id="special-place-map" class="mb-12 flex flex-col justify-center items-center gap-6 bg-white/70 backdrop-blur-sm p-8 rounded-2xl shadow-lg border border-pink-100">
+             <h3 class="title-font text-3xl text-pink-500">Our Special Place</h3> <p class="text-gray-600">The theory test centre... maybe not *that* special, but memorable! 😉</p>
+             <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2481.2708660673616!2d-0.48036122241007184!3d51.544932007959545!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x48766fdc724ee11b%3A0x3a87919af11f233d!2sDVSA%20Theory%20Test%20Centre.!5e0!3m2!1sen!2suk!4v1761590734762!5m2!1sen!2suk" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+        </section>
+
+        <!-- Photo Gallery --><main class="mt-16">
+            <h2 class="title-font text-4xl text-pink-500 text-center mb-10">Our Memory Lane</h2>
+            <div id="memory-grid" class="columns-1 sm:columns-2 md:columns-3 lg:columns-4 gap-6">
+                <div id="gallery-placeholder" class="col-span-full text-center py-20 text-gray-400" style="display: none;"> <p class="text-2xl title-font">Your memories will appear here...</p> <p>Edit the script to add your first photo!</p> </div>
+                <!-- Photos added by JS -->
+            </div>
+        </main>
+
+        <!-- Anniversary Message --><div id="anniversary-message"> <img src="https://media0.giphy.com/media/v1.Y2lkPTc5MGI3NjExZmZ4Mm5ranBhbnB3bDM5Y3V4bG16d2dpamo3bTFieTZyNDM4OHA3aiZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/F3OHH5KL7po9qfHOJc/giphy.gif" alt="Cutesy Heart"> <p>Happy 1 Year Anniversary, Bubs!</p> </div>
+
+        <footer class="text-center mt-16 py-6 border-t border-pink-100"> <p class="text-pink-400 title-font text-2xl">Always & Forever</p> </footer>
+    </div>
+
+    <!-- Love Letter Modal --><div id="love-letter-modal" class="fixed inset-0 w-full h-full flex items-center justify-center z-[100] hidden" aria-labelledby="modal-title" role="dialog" aria-modal="true">
+        <div id="modal-overlay-letter" class="modal-overlay fixed inset-0 w-full h-full"></div>
+        <div class="modal-content relative w-11/12 max-w-2xl p-6 sm:p-10 rounded-2xl shadow-2xl overflow-y-auto" style="max-height: 90vh;">
+            <button id="close-letter-btn" class="modal-close-btn absolute top-4 right-4" aria-label="Close letter"> &times; </button>
+            <h2 id="modal-title" class="title-font text-4xl text-pink-500 text-center mb-6">To My LIL SHEILAAAAA!,</h2>
+            <p class="letter-text text-lg"> Bubs, I just wanted to start off by saying, i love you more.😊 Anyways, I just wanted to make this lil page to remind you of some of the memories we had together and we will obviously update this with more memories we make together. <br><br> Remembering all our prior interactions before we started dating always made me laugh, almost all interactions ( IM SORRY OKAY 😭 ). I have never gotten close with anyone like i am with you ( Dont tell kausic, you will piss him off 🤣 ). But ye, being around you always felt so simple, it was as if i never had to try be someone im not, and ever since we've started dating, its only been easier to speak my mind and be myself. Loving you is the most rewarding thing i have ever done, and I can't wait to carry on loving you, (In more then one way 😏) <br><br> Remember all our calls from before we started dating, and we would always talk about the dumbest stuff together. Our lil convos were the highlights of my days, and theres no one else i would rather ask my silly and dumb questions, my lil bubs 😘. (Remember when we talked about why the sky was blue 🤣, idk if you remember, but it was one of the odd convos we remember) <br><br> Thank you for being you. Thank you for choosing me, every single day. I love you more than all the confetti on this page, more than all the phases of the moon. Happy 1 year anniversary!🎉🎉🎉 <br><br> From your, <br> <span class="title-font text-3xl text-pink-600">Lil Bubs</span> </p>
         </div>
     </div>
 
+    <!-- === NEW VIDEO DUCK HTML === -->
+    <div id="video-duck-container" aria-label="Click me for a surprise video!">
+        <span class="duck-banner">Click Me!</span>
+        <svg class="duck-svg" viewBox="0 0 100 100" fill="#FFD700" xmlns="http://www.w3.org/2000/svg">
+            <!-- Simple Duck Body -->
+            <ellipse cx="50" cy="65" rx="30" ry="25" fill="#FFDA63"/>
+            <!-- Head -->
+            <circle cx="70" cy="40" r="20" fill="#FFDA63"/>
+            <!-- Beak -->
+            <path d="M85 38 C 95 35, 98 45, 88 45 Z" fill="#FFA500"/>
+            <!-- Eye -->
+            <circle cx="75" cy="35" r="3" fill="#333"/>
+            <!-- Wing -->
+            <path d="M40 60 Q 20 70, 40 80 Q 50 70, 40 60 Z" fill="#FFE48A"/>
+        </svg>
+    </div>
+
+    <!-- === NEW VIDEO MODAL HTML === -->
+    <div id="video-modal" class="fixed inset-0 w-full h-full flex items-center justify-center z-[110] hidden" aria-labelledby="video-modal-title" role="dialog" aria-modal="true">
+        <!-- Overlay -->
+        <div id="modal-overlay-video" class="modal-overlay fixed inset-0 w-full h-full"></div>
+
+        <!-- Modal Content -->
+        <div class="modal-content video-modal-content relative">
+            <!-- Close Button -->
+            <button id="close-video-btn" class="modal-close-btn absolute" aria-label="Close video player">
+                &times;
+            </button>
+
+            <!-- Video Player Wrapper -->
+            <div class="video-player-wrapper mt-4">
+                <!-- IMPORTANT: Replace the src below with your actual video link! -->
+                <iframe id="video-player-iframe"
+                    src="about:blank" <!-- Start blank to prevent loading until opened -->
+                    title="Our Special Video"
+                    frameborder="0"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                    allowfullscreen>
+                </iframe>
+            </div>
+             <p id="video-modal-title" class="text-center title-font text-pink-500 text-2xl mt-3">A little surprise...</p>
+        </div>
+    </div>
+    <!-- === END VIDEO MODAL === -->
+
+
     <script>
+        // Photo List (Your personalized list)
+        const ourMemoriesData = [ { image: "https://i.postimg.cc/NFbV91GK/20250624-202537.jpg", caption: "PROM!!" }, { image: "https://i.postimg.cc/gcK1TPVK/20250209-102048.jpg", caption: "Beach Trip" }, { image: "https://i.postimg.cc/wMFPyhqZ/20250122-155915.jpg", caption: "B&M!!" }, { image: "https://i.postimg.cc/bwZMrDKW/20250927-111513.jpg", caption: "First Night Over" }, { image: "https://i.postimg.cc/SRV52WQX/20250624-212221.jpg", caption: "MY Lil Bubs" }, { image: "https://i.postimg.cc/T1QSLr2p/20250624-205657.jpg", caption: "Just Us" }, ];
+
+        // --- DOM Elements ---
         const animationContainer = document.getElementById('animation-container');
-        const yesButton = document.getElementById('yes-button');
-        const noButton = document.getElementById('no-button');
-        // Removed references to contentBox, questionText, addedGif as they aren't hidden anymore
+        const openLetterBtn = document.getElementById('open-letter-btn');
+        const closeLetterBtn = document.getElementById('close-letter-btn');
+        const loveLetterModal = document.getElementById('love-letter-modal');
+        const modalOverlayLetter = document.getElementById('modal-overlay-letter');
+        const timerDisplayElement = document.getElementById('love-timer');
+        const moonDateInput1 = document.getElementById('moon-date-input-1');
+        const moonDateInput2 = document.getElementById('moon-date-input-2');
+        const moonCheckBtn = document.getElementById('moon-check-btn');
+        const moonResult1El = document.getElementById('moon-result-1');
+        const moonResult2El = document.getElementById('moon-result-2');
+        const memoryGrid = document.getElementById('memory-grid');
+        const galleryPlaceholder = document.getElementById('gallery-placeholder');
 
-        let noClickCount = 0;
-        // Keep track of original styles to increment from
-        let yesButtonPaddingVertical = 12; // 0.75rem * 16px/rem
-        let yesButtonPaddingHorizontal = 28; // 1.75rem * 16px/rem
-        let yesButtonFontSize = 18; // 1.125rem * 16px/rem
+        // --- NEW VIDEO DUCK Elements ---
+        const videoDuckContainer = document.getElementById('video-duck-container');
+        const videoModal = document.getElementById('video-modal');
+        const closeVideoBtn = document.getElementById('close-video-btn');
+        const modalOverlayVideo = document.getElementById('modal-overlay-video');
+        const videoPlayerIframe = document.getElementById('video-player-iframe');
+        // --- IMPORTANT: Set your actual video URL here! ---
+        const yourVideoUrl = "https://streamable.com/e/y50sqi?"; // Placeholder: Rick Roll :) Replace this!
 
-        noButton.addEventListener('click', () => {
-            noClickCount++;
+        // --- Love Letter Modal Logic ---
+        function openLetter() { loveLetterModal.classList.remove('hidden'); }
+        function closeLetter() { loveLetterModal.classList.add('hidden'); }
+        openLetterBtn.addEventListener('click', openLetter);
+        closeLetterBtn.addEventListener('click', closeLetter);
+        modalOverlayLetter.addEventListener('click', closeLetter);
 
-            // Increase Yes button size slightly each time
-            yesButtonPaddingVertical += 2; // Increase vertical padding
-            yesButtonPaddingHorizontal += 5; // Increase horizontal padding proportionally
-            yesButtonFontSize += 1; // Increase font size slightly
+        // --- NEW Video Modal Logic ---
+        function openVideoModal() {
+            // Set the src only when opening to start playback (add autoplay=1 for auto start)
+            videoPlayerIframe.src = yourVideoUrl + "?autoplay=1&rel=0"; // Added autoplay and suggested videos off
+            videoModal.classList.remove('hidden');
+        }
+        function closeVideoModal() {
+             videoModal.classList.add('hidden');
+             // Stop the video by removing the src attribute
+             videoPlayerIframe.src = "about:blank";
+        }
+        videoDuckContainer.addEventListener('click', openVideoModal);
+        closeVideoBtn.addEventListener('click', closeVideoModal);
+        modalOverlayVideo.addEventListener('click', closeVideoModal);
 
-            yesButton.style.padding = `${yesButtonPaddingVertical / 16}rem ${yesButtonPaddingHorizontal / 16}rem`;
-            yesButton.style.fontSize = `${yesButtonFontSize / 16}rem`;
-            // Optional: Add a subtle scale effect that resets slightly
-            yesButton.style.transform = `scale(1.${noClickCount})`; // e.g., scale(1.1), scale(1.2)...
-            setTimeout(() => { yesButton.style.transform = 'scale(1)'; }, 150); // Reset scale after a moment
 
+        // --- Count-Up Timer Logic ---
+        const loveStartDate = new Date("Nov 20, 2024 15:30:00").getTime();
+        function updateLoveTimer() { /* ... same code as before ... */
+            const now = new Date().getTime();
+            const distance = now - loveStartDate;
+            const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+            const fDays = String(days).padStart(2, '0');
+            const fHours = String(hours).padStart(2, '0');
+            const fMinutes = String(minutes).padStart(2, '0');
+            const fSeconds = String(seconds).padStart(2, '0');
+            if (timerDisplayElement) { timerDisplayElement.innerHTML = `${fDays}d ${fHours}h ${fMinutes}m ${fSeconds}s`; }
+        }
+        setInterval(updateLoveTimer, 1000); updateLoveTimer();
 
-            // After 4 clicks, hide the No button
-            if (noClickCount >= 4) {
-                noButton.classList.add('hidden'); // Just hide the No button
+        // --- Moon Phase Logic ---
+        moonDateInput1.value = "2006-11-21"; moonDateInput2.value = "2007-04-11";
+        const MOON_PHASES = [ { name: 'New Moon', emoji: '🌑' }, { name: 'Waxing Crescent', emoji: '🌒' }, { name: 'First Quarter', emoji: '🌓' }, { name: 'Waxing Gibbous', emoji: '🌔' }, { name: 'Full Moon', emoji: '🌕' }, { name: 'Waning Gibbous', emoji: '🌖' }, { name: 'Third Quarter', emoji: '🌗' }, { name: 'Waning Crescent', emoji: '🌘' }, ];
+        const KNOWN_NEW_MOON = new Date('2000-01-06T18:14:00Z').getTime(); const LUNAR_CYCLE_MS = 29.530588853 * 24 * 60 * 60 * 1000;
+        function getMoonPhase(date) { /* ... same code as before ... */
+            const targetTime = new Date(date).getTime();
+            const msElapsed = targetTime - KNOWN_NEW_MOON;
+            const phase = (msElapsed % LUNAR_CYCLE_MS) / LUNAR_CYCLE_MS;
+            const normalizedPhase = phase < 0 ? phase + 1 : phase;
+            const phaseIndex = Math.floor((normalizedPhase * 8 + 0.5) % 8);
+            return MOON_PHASES[phaseIndex];
+         }
+        function displayMoonPhase(inputElement, resultElement) { /* ... same code as before ... */
+            const dateValue = inputElement.value;
+            if (!dateValue) { resultElement.innerHTML = `<p class="text-red-500">Select date.</p>`; return; }
+            const dateParts = dateValue.split('-'); const selectedDate = new Date(dateParts[0], dateParts[1] - 1, dateParts[2]); const phase = getMoonPhase(selectedDate);
+            const displayDate = selectedDate.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+            resultElement.innerHTML = ` <p class="text-gray-600 text-sm">${displayDate}:</p> <p class="text-5xl">${phase.emoji}</p> <p class="text-xl title-font text-pink-500">${phase.name}</p> `;
+         }
+        function checkBothMoonPhases() { displayMoonPhase(moonDateInput1, moonResult1El); displayMoonPhase(moonDateInput2, moonResult2El); }
+        moonCheckBtn.addEventListener('click', checkBothMoonPhases); checkBothMoonPhases();
+
+        // --- Polaroid Grid Loader ---
+        function loadMemoryGrid() { /* ... same code as before ... */
+            memoryGrid.innerHTML = ''; memoryGrid.appendChild(galleryPlaceholder);
+            if (ourMemoriesData.length === 0) { galleryPlaceholder.style.display = 'block'; }
+            else { galleryPlaceholder.style.display = 'none'; if (galleryPlaceholder.parentNode === memoryGrid) { memoryGrid.removeChild(galleryPlaceholder); }
+                ourMemoriesData.sort(() => 0.5 - Math.random());
+                ourMemoriesData.forEach(memory => {
+                    const container = document.createElement('div'); container.className = 'polaroid'; const rotation = Math.random() * 4 - 2; container.style.transform = `rotate(${rotation}deg)`;
+                    const img = document.createElement('img'); img.src = memory.image; img.alt = memory.caption; img.onerror = () => { console.error("Failed to load image:", memory.image); img.src = 'https://placehold.co/400x400/fce7f3/db2777?text=Image+Missing'; img.alt = 'Image failed to load'; };
+                    const caption = document.createElement('p'); caption.className = 'polaroid-caption'; caption.textContent = memory.caption; container.append(img, caption); memoryGrid.appendChild(container);
+                });
             }
-        });
-
-        yesButton.addEventListener('click', () => {
-            // Redirect logic remains the same
-             window.location.href = './love_story_main.html';
-        });
-
-
-        // --- Floating Hearts ---
-        function createHeart() {
-            const heart = document.createElement('div');
-            heart.innerHTML = '&#x2764;';
-            heart.className = 'heart';
-            heart.style.left = `${Math.random() * 100}vw`;
-            heart.style.animationDuration = `${Math.random() * 2 + 8}s`;
-            heart.style.opacity = Math.random();
-            heart.style.fontSize = `${Math.random() * 10 + 10}px`;
-            animationContainer.appendChild(heart);
-            setTimeout(() => { heart.remove(); }, 10000);
         }
 
-        // --- Confetti Rain ---
-        function createConfetti() {
-            const confetti = document.createElement('div');
-            const type = Math.random();
-            if (type < 0.33) { confetti.className = 'confetti'; }
-            else if (type < 0.66) { confetti.className = 'confetti square'; }
-            else { confetti.className = 'confetti triangle'; }
-            confetti.style.left = `${Math.random() * 100}vw`;
-            const duration = Math.random() * 3 + 5;
-            confetti.style.setProperty('--duration', `${duration}s`);
-            confetti.style.opacity = Math.random() * 0.7 + 0.3;
-            confetti.style.transform = `scale(${Math.random() * 0.7 + 0.3})`;
-            animationContainer.appendChild(confetti);
-            setTimeout(() => { confetti.remove(); }, duration * 1000 + 500);
+        // --- Animation Functions (Hearts, Confetti, Sparkles) ---
+        function createHeart() { /* ... same code as before ... */
+            const heart = document.createElement('div'); heart.innerHTML = '&#x2764;'; heart.className = 'heart'; heart.style.left = `${Math.random() * 100}vw`; heart.style.animationDuration = `${Math.random() * 2 + 8}s`; heart.style.opacity = Math.random(); heart.style.fontSize = `${Math.random() * 10 + 10}px`; animationContainer.appendChild(heart); setTimeout(() => { heart.remove(); }, 10000);
+         }
+        function createConfetti() { /* ... same code as before ... */
+             const confetti = document.createElement('div'); const type = Math.random(); if (type < 0.33) { confetti.className = 'confetti'; } else if (type < 0.66) { confetti.className = 'confetti square'; } else { confetti.className = 'confetti triangle'; } confetti.style.left = `${Math.random() * 100}vw`; const duration = Math.random() * 3 + 5; confetti.style.setProperty('--duration', `${duration}s`); confetti.style.opacity = Math.random() * 0.7 + 0.3; confetti.style.transform = `scale(${Math.random() * 0.7 + 0.3})`; animationContainer.appendChild(confetti); setTimeout(() => { confetti.remove(); }, duration * 1000 + 500);
         }
+        function createSparkle() { /* ... same code as before ... */
+            const sparkle = document.createElement('div'); sparkle.className = 'sparkle'; const size = Math.random() * 8 + 4; sparkle.style.width = `${size}px`; sparkle.style.height = `${size}px`; sparkle.style.left = `${Math.random() * 100}vw`; sparkle.style.top = `${Math.random() * 100}vh`; const duration = Math.random() * 2 + 1; sparkle.style.setProperty('--sparkle-duration', `${duration}s`); animationContainer.appendChild(sparkle); setTimeout(() => { sparkle.remove(); }, duration * 2000);
+         }
 
-        // --- Sparkles ---
-        function createSparkle() {
-            const sparkle = document.createElement('div');
-            sparkle.className = 'sparkle';
-            const size = Math.random() * 8 + 4;
-            sparkle.style.width = `${size}px`;
-            sparkle.style.height = `${size}px`;
-            sparkle.style.left = `${Math.random() * 100}vw`;
-            sparkle.style.top = `${Math.random() * 100}vh`;
-            const duration = Math.random() * 2 + 1;
-            sparkle.style.setProperty('--sparkle-duration', `${duration}s`);
-            animationContainer.appendChild(sparkle);
-            setTimeout(() => { sparkle.remove(); }, duration * 2000);
-        }
-
-        // --- Start Animations ---
+        // --- Initial Load & Interval Timers ---
         setInterval(createHeart, 500);
         setInterval(createConfetti, 100);
         setInterval(createSparkle, 300);
+        loadMemoryGrid();
 
     </script>
 </body>
 </html>
-

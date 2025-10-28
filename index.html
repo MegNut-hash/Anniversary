@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>A Question for You...</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Nunito:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        /* Gradient Animation (same as before) */
+        @keyframes gradient-animation {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        body {
+            font-family: 'Nunito', sans-serif;
+            background: linear-gradient(-45deg, #fff0f5, #ffe4e1, #fff8f8, #fce7f3);
+            background-size: 400% 400%;
+            animation: gradient-animation 20s ease infinite;
+            overflow: hidden; /* Hide scrollbars for this simple page */
+            position: relative;
+            display: flex; /* Center content */
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 1rem;
+        }
+        .title-font {
+            font-family: 'Dancing Script', cursive;
+        }
+
+        /* Floating Hearts (same as before) */
+        @keyframes fall {
+            0% { transform: translateY(-10vh) rotate(0deg); opacity: 1; }
+            100% { transform: translateY(110vh) rotate(360deg); opacity: 0; }
+        }
+        .heart {
+            position: fixed;
+            top: 0;
+            color: #F472B6;
+            animation: fall 10s linear infinite;
+            font-size: 24px;
+            pointer-events: none;
+            z-index: 1; /* Below content */
+        }
+
+        /* Confetti (same as before) */
+        @keyframes confetti-fall {
+            0% { transform: translateY(-100%) rotateZ(0deg); opacity: 1; }
+            100% { transform: translateY(100vh) rotateZ(720deg); opacity: 0; }
+        }
+        .confetti {
+            position: fixed;
+            top: -20px;
+            width: 10px;
+            height: 10px;
+            background-color: #fca5a5;
+            animation: confetti-fall var(--duration) linear infinite;
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 1;
+        }
+        .confetti.square { border-radius: 0; background-color: #fda4af; }
+        .confetti.triangle { width: 0; height: 0; border-left: 5px solid transparent; border-right: 5px solid transparent; border-bottom: 10px solid #fb7185; background-color: transparent; }
+
+        /* Sparkles (same as before) */
+        @keyframes twinkle {
+            0% { opacity: 0.5; transform: scale(1); }
+            50% { opacity: 1; transform: scale(1.2); }
+            100% { opacity: 0.5; transform: scale(1); }
+        }
+        .sparkle {
+            position: fixed;
+            background: rgba(255, 255, 255, 0.8);
+            border-radius: 50%;
+            pointer-events: none;
+            box-shadow: 0 0 5px 3px rgba(255, 255, 255, 0.6);
+            animation: twinkle var(--sparkle-duration) ease-in-out infinite;
+            z-index: 1;
+        }
+
+        /* Content Styling */
+        .content-box {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(8px);
+            padding: 2.5rem 2rem;
+            border-radius: 20px;
+            box-shadow: 0 10px 25px rgba(236, 72, 153, 0.2);
+            border: 2px solid #fbcfe8;
+            text-align: center;
+            max-width: 90%;
+            width: 450px;
+            position: relative;
+            z-index: 10; /* Above animations */
+        }
+
+        .question-text {
+            font-family: 'Dancing Script', cursive;
+            font-size: 2.5rem; /* text-4xl */
+            color: #E11D48; /* Hot pink */
+            margin-bottom: 2rem;
+            line-height: 1.3;
+        }
+
+        .button-container {
+            display: flex;
+            justify-content: center;
+            gap: 1rem; /* Space between buttons */
+            flex-wrap: wrap; /* Allow wrapping on small screens */
+        }
+
+        .styled-button {
+            font-family: 'Nunito', sans-serif;
+            font-weight: 600;
+            padding: 0.75rem 1.75rem; /* Base padding */
+            border-radius: 99px; /* Pill shape */
+            cursor: pointer;
+            transition: all 0.3s ease-in-out;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            font-size: 1.125rem; /* Base font size */
+            border: none;
+        }
+
+        .yes-button {
+            background-color: #f472b6; /* Pink */
+            color: white;
+        }
+        .yes-button:hover {
+            background-color: #ec4899; /* Darker pink */
+            transform: scale(1.05);
+        }
+
+        .no-button {
+            background-color: #fde6f4; /* Very light pink */
+            color: #db2777; /* Dark pink text */
+        }
+        .no-button:hover {
+            background-color: #fbcfe8; /* Light pink */
+            transform: scale(1.05);
+        }
+        .no-button.hidden {
+            display: none;
+        }
+
+    </style>
+</head>
+<body>
+
+    <!-- Container for floating elements -->
+    <div id="animation-container" class="absolute inset-0 overflow-hidden pointer-events-none"></div>
+
+    <!-- Main Content Box -->
+    <div class="content-box">
+        <h1 class="question-text">Will you spend forever making memories with me? ♡</h1>
+
+        <div class="button-container">
+            <button id="yes-button" class="styled-button yes-button">Yes!</button>
+            <button id="no-button" class="styled-button no-button">No</button>
+        </div>
+    </div>
+
+    <script>
+        const animationContainer = document.getElementById('animation-container');
+        const yesButton = document.getElementById('yes-button');
+        const noButton = document.getElementById('no-button');
+
+        let noClickCount = 0;
+        let yesButtonPadding = 12; // Base padding in px (0.75rem * 16px/rem)
+        let yesButtonFontSize = 18; // Base font size in px (1.125rem * 16px/rem)
+
+        noButton.addEventListener('click', () => {
+            noClickCount++;
+
+            // Increase Yes button size
+            yesButtonPadding += 4; // Increase padding
+            yesButtonFontSize += 2; // Increase font size
+
+            yesButton.style.padding = `${yesButtonPadding / 16}rem ${ (yesButtonPadding * 2.3) / 16}rem`; // Maintain approx ratio
+            yesButton.style.fontSize = `${yesButtonFontSize / 16}rem`;
+
+
+            // After 4 clicks, hide the No button
+            if (noClickCount >= 4) {
+                noButton.classList.add('hidden'); // Hide using CSS class
+            }
+        });
+
+        yesButton.addEventListener('click', () => {
+            // Redirect to the main love story page
+            // MAKE SURE YOU RENAME THE ORIGINAL FILE TO 'love_story_main.html'
+            // Added './' to ensure it's treated as a relative path
+            window.location.href = './love_story_main.html';
+        });
+
+
+        // --- Floating Hearts ---
+        function createHeart() {
+            const heart = document.createElement('div');
+            heart.innerHTML = '&#x2764;';
+            heart.className = 'heart';
+            heart.style.left = `${Math.random() * 100}vw`;
+            heart.style.animationDuration = `${Math.random() * 2 + 8}s`;
+            heart.style.opacity = Math.random();
+            heart.style.fontSize = `${Math.random() * 10 + 10}px`;
+            animationContainer.appendChild(heart);
+            setTimeout(() => { heart.remove(); }, 10000);
+        }
+
+        // --- Confetti Rain ---
+        function createConfetti() {
+            const confetti = document.createElement('div');
+            const type = Math.random();
+            if (type < 0.33) { confetti.className = 'confetti'; }
+            else if (type < 0.66) { confetti.className = 'confetti square'; }
+            else { confetti.className = 'confetti triangle'; }
+            confetti.style.left = `${Math.random() * 100}vw`;
+            const duration = Math.random() * 3 + 5;
+            confetti.style.setProperty('--duration', `${duration}s`);
+            confetti.style.opacity = Math.random() * 0.7 + 0.3;
+            confetti.style.transform = `scale(${Math.random() * 0.7 + 0.3})`;
+            animationContainer.appendChild(confetti);
+            setTimeout(() => { confetti.remove(); }, duration * 1000 + 500);
+        }
+
+        // --- Sparkles ---
+        function createSparkle() {
+            const sparkle = document.createElement('div');
+            sparkle.className = 'sparkle';
+            const size = Math.random() * 8 + 4;
+            sparkle.style.width = `${size}px`;
+            sparkle.style.height = `${size}px`;
+            sparkle.style.left = `${Math.random() * 100}vw`;
+            sparkle.style.top = `${Math.random() * 100}vh`;
+            const duration = Math.random() * 2 + 1;
+            sparkle.style.setProperty('--sparkle-duration', `${duration}s`);
+            animationContainer.appendChild(sparkle);
+            setTimeout(() => { sparkle.remove(); }, duration * 2000);
+        }
+
+        // --- Start Animations ---
+        setInterval(createHeart, 500);
+        setInterval(createConfetti, 100);
+        setInterval(createSparkle, 300);
+
+    </script>
+</body>
+</html>
+

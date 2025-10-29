@@ -237,7 +237,7 @@
         const openLetterBtn = document.getElementById('open-letter-btn');
         const closeLetterBtn = document.getElementById('close-letter-btn');
         const loveLetterModal = document.getElementById('love-letter-modal');
-        const modalOverlayLetter = document.getElementById('modal-overlay-letter'); // Corrected ID
+        const modalOverlayLetter = document.getElementById('modal-overlay-letter');
         const timerDisplayElement = document.getElementById('love-timer');
         const moonDateInput1 = document.getElementById('moon-date-input-1');
         const moonDateInput2 = document.getElementById('moon-date-input-2');
@@ -253,7 +253,7 @@
         const videoPlayerIframe = document.getElementById('video-player-iframe');
 
         // --- Video URL ---
-        const yourVideoUrl = "https://streamable.com/e/y50sqi"; // Your Streamable Link
+        const yourVideoUrl = "https://streamable.com/e/y50sqi";
 
         // --- Love Letter Modal Logic ---
         function openLetter() { if (loveLetterModal) loveLetterModal.classList.remove('hidden'); }
@@ -280,7 +280,7 @@
 
         // --- Count-Up Timer Logic ---
         const loveStartDate = new Date("Nov 20, 2024 15:30:00").getTime();
-        function updateLoveTimer() { /* ... unchanged ... */
+        function updateLoveTimer() { 
             const now = new Date().getTime(); const distance = now - loveStartDate;
             const days = Math.floor(distance / (1000 * 60 * 60 * 24)); const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)); const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60)); const seconds = Math.floor((distance % (1000 * 60)) / 1000);
             const fDays = String(days).padStart(2, '0'); const fHours = String(hours).padStart(2, '0'); const fMinutes = String(minutes).padStart(2, '0'); const fSeconds = String(seconds).padStart(2, '0');
@@ -301,7 +301,7 @@
         if (moonCheckBtn) moonCheckBtn.addEventListener('click', checkBothMoonPhases); checkBothMoonPhases();
 
         // --- Polaroid Grid Loader ---
-        function loadMemoryGrid() { /* ... unchanged ... */
+        function loadMemoryGrid() { 
             if (!memoryGrid || !galleryPlaceholder) return; memoryGrid.innerHTML = ''; memoryGrid.appendChild(galleryPlaceholder);
             if (ourMemoriesData.length === 0) { galleryPlaceholder.style.display = 'block'; }
             else { galleryPlaceholder.style.display = 'none'; if (galleryPlaceholder.parentNode === memoryGrid) { memoryGrid.removeChild(galleryPlaceholder); }
@@ -314,7 +314,7 @@
             }
          }
 
-        // --- Reasons I Love You Logic ---
+        
         const reasonTriggers = document.querySelectorAll('.reason-trigger');
         if (reasonTriggers) {
             reasonTriggers.forEach(trigger => {
@@ -343,4 +343,5 @@
     </script>
 </body>
 </html>
+
 

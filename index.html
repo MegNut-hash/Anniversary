@@ -7,7 +7,8 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Nunito:wght@400;600&display=swap" rel="stylesheet">
+    <!-- Updated Google Fonts link -->
+    <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@700&family=Nunito:wght@400;600&display=swap" rel="stylesheet">
     <style>
         /* Gradient Animation */
         @keyframes gradient-animation {
@@ -17,7 +18,7 @@
         }
 
         body {
-            font-family: 'Nunito', sans-serif;
+            font-family: 'Nunito', sans-serif; /* Keep Nunito for body */
             background: linear-gradient(-45deg, #fff0f5, #ffe4e1, #fff8f8, #fce7f3);
             background-size: 400% 400%;
             animation: gradient-animation 20s ease infinite;
@@ -30,10 +31,10 @@
             padding: 1rem;
         }
         .title-font {
-            font-family: 'Dancing Script', cursive;
+            font-family: 'Caveat', cursive; /* Changed to Caveat */
         }
 
-        /* Floating Animations (Hearts, Confetti, Sparkles) */
+        /* ... rest of the styles ... */
         @keyframes fall { 0% { transform: translateY(-10vh) rotate(0deg); opacity: 1; } 100% { transform: translateY(110vh) rotate(360deg); opacity: 0; } }
         .heart { position: fixed; top: 0; color: #F472B6; animation: fall 10s linear infinite; font-size: 24px; pointer-events: none; z-index: 1; }
         @keyframes confetti-fall { 0% { transform: translateY(-100%) rotateZ(0deg); opacity: 1; } 100% { transform: translateY(100vh) rotateZ(720deg); opacity: 0; } }
@@ -42,22 +43,8 @@
         .confetti.triangle { width: 0; height: 0; border-left: 5px solid transparent; border-right: 5px solid transparent; border-bottom: 10px solid #fb7185; background-color: transparent; }
         @keyframes twinkle { 0% { opacity: 0.5; transform: scale(1); } 50% { opacity: 1; transform: scale(1.2); } 100% { opacity: 0.5; transform: scale(1); } }
         .sparkle { position: fixed; background: rgba(255, 255, 255, 0.8); border-radius: 50%; pointer-events: none; box-shadow: 0 0 5px 3px rgba(255, 255, 255, 0.6); animation: twinkle var(--sparkle-duration) ease-in-out infinite; z-index: 1; }
-
-        /* Content Styling */
-        .content-box {
-            background: rgba(255, 255, 255, 0.85); /* Slightly less transparent */
-            backdrop-filter: blur(8px);
-            padding: 2.5rem 2rem;
-            border-radius: 20px;
-            box-shadow: 0 10px 25px rgba(236, 72, 153, 0.2);
-            border: 2px solid #fbcfe8;
-            text-align: center;
-            max-width: 90%;
-            width: 450px;
-            position: relative;
-            z-index: 10; /* Above animations AND background photos */
-        }
-        .question-text { font-family: 'Dancing Script', cursive; font-size: 2.5rem; color: #E11D48; margin-bottom: 1rem; line-height: 1.3; }
+        .content-box { background: rgba(255, 255, 255, 0.85); backdrop-filter: blur(8px); padding: 2.5rem 2rem; border-radius: 20px; box-shadow: 0 10px 25px rgba(236, 72, 153, 0.2); border: 2px solid #fbcfe8; text-align: center; max-width: 90%; width: 450px; position: relative; z-index: 10; }
+        .question-text { font-family: 'Caveat', cursive; font-size: 2.5rem; color: #E11D48; margin-bottom: 1rem; line-height: 1.3; } /* Changed to Caveat */
         .added-gif { max-width: 150px; height: auto; margin: 0 auto 1.5rem auto; border-radius: 10px; display: block; }
         .button-container { display: flex; justify-content: center; gap: 1rem; flex-wrap: wrap; }
         .styled-button { font-family: 'Nunito', sans-serif; font-weight: 600; padding: 0.75rem 1.75rem; border-radius: 99px; cursor: pointer; transition: all 0.3s ease-in-out; box-shadow: 0 4px 10px rgba(0,0,0,0.1); font-size: 1.125rem; border: none; position: relative; z-index: 11; }
@@ -66,33 +53,9 @@
         .no-button { background-color: #fde6f4; color: #db2777; transition: opacity 0.3s ease-out, transform 0.3s ease-in-out; }
         .no-button:hover { background-color: #fbcfe8; transform: scale(1.05); }
         .no-button.hidden { opacity: 0; pointer-events: none; }
-
-        /* --- Background Polaroid Styling --- */
-        .background-polaroid {
-            position: absolute;
-            background: white;
-            padding: 0.5rem; /* Smaller padding */
-            padding-bottom: 1.5rem; /* Smaller bottom padding */
-            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-            border-radius: 4px;
-            width: 100px; /* Fixed small size */
-            height: 120px;
-            z-index: 5; /* Behind content box */
-            overflow: hidden; /* Hide overflowing images */
-            transition: transform 0.3s ease-out; /* Add transition for hover effect */
-        }
-         /* Optional: Add slight hover effect for background polaroids */
-        .background-polaroid:hover {
-             transform: scale(1.1) rotate(var(--rotation, 0deg)) !important; /* Ensure hover rotation overrides base */
-             z-index: 6; /* Bring slightly forward on hover */
-        }
-
-        .background-polaroid img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            border: 1px solid #fce7f3;
-        }
+        .background-polaroid { position: absolute; background: white; padding: 0.5rem; padding-bottom: 1.5rem; box-shadow: 0 4px 8px rgba(0,0,0,0.1); border-radius: 4px; width: 100px; height: 120px; z-index: 5; overflow: hidden; transition: transform 0.3s ease-out; }
+        .background-polaroid:hover { transform: scale(1.1) rotate(var(--rotation, 0deg)) !important; z-index: 6; }
+        .background-polaroid img { width: 100%; height: 100%; object-fit: cover; border: 1px solid #fce7f3; }
 
     </style>
 </head>
@@ -122,20 +85,13 @@
         const noButton = document.getElementById('no-button');
         const backgroundPhotosContainer = document.getElementById('background-photos-container');
 
-        // ##################################################################
-        // ### EDIT THIS LIST FOR FRONT PAGE BACKGROUND PHOTOS (NOW 5!) ###
-        // ##################################################################
         const frontPagePhotos = [
-            // Add URLs for the 5 small background polaroids
             { url: "https://i.postimg.cc/W3jYS6wQ/Snapchat-382823788.jpg", position: { top: '15%', left: '10%' }, rotation: -15 },
             { url: "https://i.postimg.cc/9MVg1tY6/Snapchat-595529979.jpg", position: { top: '60%', right: '12%' }, rotation: 20 },
             { url: "https://i.postimg.cc/DZFp5dc7/Snapchat-647498109.jpg", position: { bottom: '10%', left: '25%' }, rotation: 5 },
-            // Added two more:
             { url: "https://i.postimg.cc/pTxckYB2/Snapchat-781963111.jpg", position: { top: '20%', right: '15%' }, rotation: 10 },
             { url: "https://i.postimg.cc/cHZkTMc1/Snapchat-785311227.jpg", position: { bottom: '15%', right: '30%' }, rotation: -8 },
         ];
-        // ##################################################################
-
 
         let noClickCount = 0;
         let yesButtonPaddingVertical = 12;
@@ -149,8 +105,7 @@
             yesButtonFontSize += 1;
             yesButton.style.padding = `${yesButtonPaddingVertical / 16}rem ${yesButtonPaddingHorizontal / 16}rem`;
             yesButton.style.fontSize = `${yesButtonFontSize / 16}rem`;
-            // Subtle scale effect on Yes button
-            yesButton.style.transform = `scale(1.0${noClickCount < 5 ? noClickCount : 5})`; // Limit scale effect slightly
+            yesButton.style.transform = `scale(1.0${noClickCount < 5 ? noClickCount : 5})`;
             setTimeout(() => { yesButton.style.transform = 'scale(1)'; }, 150);
             if (noClickCount >= 4) {
                 noButton.classList.add('hidden');
@@ -166,44 +121,30 @@
             frontPagePhotos.forEach(photoData => {
                 const polaroidDiv = document.createElement('div');
                 polaroidDiv.className = 'background-polaroid';
-                polaroidDiv.style.position = 'absolute'; // Ensure it's absolute within its container
-
-                // Apply position styles
+                polaroidDiv.style.position = 'absolute';
                 if (photoData.position.top) polaroidDiv.style.top = photoData.position.top;
                 if (photoData.position.bottom) polaroidDiv.style.bottom = photoData.position.bottom;
                 if (photoData.position.left) polaroidDiv.style.left = photoData.position.left;
                 if (photoData.position.right) polaroidDiv.style.right = photoData.position.right;
-
-                // Apply rotation and store it in a CSS variable for hover
                 const rotationDeg = photoData.rotation || 0;
-                polaroidDiv.style.setProperty('--rotation', `${rotationDeg}deg`); // Store rotation
+                polaroidDiv.style.setProperty('--rotation', `${rotationDeg}deg`);
                 polaroidDiv.style.transform = `rotate(${rotationDeg}deg)`;
-
-
                 const img = document.createElement('img');
                 img.src = photoData.url;
                 img.alt = 'Background memory';
                 img.onerror = () => { img.src = 'https://placehold.co/100x120/fce7f3/db2777?text=Oops!'; img.alt = 'Image error'; };
-
                 polaroidDiv.appendChild(img);
                 backgroundPhotosContainer.appendChild(polaroidDiv);
             });
         }
 
-
-        // --- Animation Functions (Hearts, Confetti, Sparkles) ---
-        function createHeart() { /* ... same ... */
-            const heart = document.createElement('div'); heart.innerHTML = '&#x2764;'; heart.className = 'heart'; heart.style.left = `${Math.random() * 100}vw`; heart.style.animationDuration = `${Math.random() * 2 + 8}s`; heart.style.opacity = Math.random(); heart.style.fontSize = `${Math.random() * 10 + 10}px`; animationContainer.appendChild(heart); setTimeout(() => { heart.remove(); }, 10000);
-        }
-        function createConfetti() { /* ... same ... */
-             const confetti = document.createElement('div'); const type = Math.random(); if (type < 0.33) { confetti.className = 'confetti'; } else if (type < 0.66) { confetti.className = 'confetti square'; } else { confetti.className = 'confetti triangle'; } confetti.style.left = `${Math.random() * 100}vw`; const duration = Math.random() * 3 + 5; confetti.style.setProperty('--duration', `${duration}s`); confetti.style.opacity = Math.random() * 0.7 + 0.3; confetti.style.transform = `scale(${Math.random() * 0.7 + 0.3})`; animationContainer.appendChild(confetti); setTimeout(() => { confetti.remove(); }, duration * 1000 + 500);
-        }
-        function createSparkle() { /* ... same ... */
-            const sparkle = document.createElement('div'); sparkle.className = 'sparkle'; const size = Math.random() * 8 + 4; sparkle.style.width = `${size}px`; sparkle.style.height = `${size}px`; sparkle.style.left = `${Math.random() * 100}vw`; sparkle.style.top = `${Math.random() * 100}vh`; const duration = Math.random() * 2 + 1; sparkle.style.setProperty('--sparkle-duration', `${duration}s`); animationContainer.appendChild(sparkle); setTimeout(() => { sparkle.remove(); }, duration * 2000);
-         }
+        // --- Animation Functions ---
+        function createHeart() { const heart = document.createElement('div'); heart.innerHTML = '&#x2764;'; heart.className = 'heart'; heart.style.left = `${Math.random() * 100}vw`; heart.style.animationDuration = `${Math.random() * 2 + 8}s`; heart.style.opacity = Math.random(); heart.style.fontSize = `${Math.random() * 10 + 10}px`; animationContainer.appendChild(heart); setTimeout(() => { heart.remove(); }, 10000); }
+        function createConfetti() { const confetti = document.createElement('div'); const type = Math.random(); if (type < 0.33) { confetti.className = 'confetti'; } else if (type < 0.66) { confetti.className = 'confetti square'; } else { confetti.className = 'confetti triangle'; } confetti.style.left = `${Math.random() * 100}vw`; const duration = Math.random() * 3 + 5; confetti.style.setProperty('--duration', `${duration}s`); confetti.style.opacity = Math.random() * 0.7 + 0.3; confetti.style.transform = `scale(${Math.random() * 0.7 + 0.3})`; animationContainer.appendChild(confetti); setTimeout(() => { confetti.remove(); }, duration * 1000 + 500); }
+        function createSparkle() { const sparkle = document.createElement('div'); sparkle.className = 'sparkle'; const size = Math.random() * 8 + 4; sparkle.style.width = `${size}px`; sparkle.style.height = `${size}px`; sparkle.style.left = `${Math.random() * 100}vw`; sparkle.style.top = `${Math.random() * 100}vh`; const duration = Math.random() * 2 + 1; sparkle.style.setProperty('--sparkle-duration', `${duration}s`); animationContainer.appendChild(sparkle); setTimeout(() => { sparkle.remove(); }, duration * 2000); }
 
         // --- Start Animations & Load Background Photos ---
-        loadBackgroundPhotos(); // Load background pics
+        loadBackgroundPhotos();
         setInterval(createHeart, 500);
         setInterval(createConfetti, 100);
         setInterval(createSparkle, 300);

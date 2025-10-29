@@ -4,496 +4,131 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Our Love Story - Time, Tides & Memories</title>
-    <!-- This is the corrected Tailwind link -->
+    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Nunito:wght@400;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@700&family=Nunito:wght@400;600&display=swap" rel="stylesheet">
     <style>
-        /* Add keyframes for the gradient animation */
-        @keyframes gradient-animation {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
-        }
+        /* Gradient Animation */
+        @keyframes gradient-animation { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
+        body { font-family: 'Nunito', sans-serif; background: linear-gradient(-45deg, #fff0f5, #ffe4e1, #fff8f8, #fce7f3); background-size: 400% 400%; animation: gradient-animation 20s ease infinite; overflow-x: hidden; position: relative; }
+        .title-font { font-family: 'Caveat', cursive; } /* Changed to Caveat */
 
-        body {
-            font-family: 'Nunito', sans-serif;
-            background: linear-gradient(-45deg, #fff0f5, #ffe4e1, #fff8f8, #fce7f3);
-            background-size: 400% 400%;
-            animation: gradient-animation 20s ease infinite;
-            overflow-x: hidden; /* Prevent horizontal scroll */
-            position: relative; /* For confetti and sparkles */
-        }
-        .title-font {
-            font-family: 'Dancing Script', cursive;
-        }
-
-        /* Floating hearts animation */
-        @keyframes fall {
-            0% { transform: translateY(-10vh) rotate(0deg); opacity: 1; }
-            100% { transform: translateY(110vh) rotate(360deg); opacity: 0; }
-        }
-        .heart {
-            position: fixed;
-            top: 0;
-            color: #F472B6; /* Pink color for hearts */
-            animation: fall 10s linear infinite;
-            font-size: 24px;
-            pointer-events: none; /* Make hearts unclickable */
-            z-index: 9999;
-        }
-
-        /* Moon Feature CSS */
-        .moon-date-input { /* Changed to class for multiple inputs */
-            border: 2px solid #FBCFE8; /* Light pink border */
-            padding: 0.5rem 1rem;
-            border-radius: 99px; /* Full pill shape */
-            font-family: 'Nunito', sans-serif;
-            color: #DB2777; /* Dark pink text */
-            outline: none;
-            transition: all 0.3s;
-        }
-        .moon-date-input:focus {
-            border-color: #F472B6; /* Brighter pink on focus */
-            box-shadow: 0 0 10px #FBCFE8;
-        }
-        .moon-date-input::-webkit-calendar-picker-indicator {
-            cursor: pointer;
-            filter: invert(50%) sepia(50%) saturate(5000%) hue-rotate(300deg);
-        }
-
-        /* Polaroid Grid CSS */
-        .polaroid {
-            background: white;
-            padding: 1rem;
-            padding-bottom: 3.5rem; /* Space for caption */
-            box-shadow: 0 4px 8px rgba(0,0,0,0.08);
-            transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
-            position: relative;
-            break-inside: avoid; /* Prevents breaking inside a column */
-            margin-bottom: 1.5rem; /* Space between polaroids */
-            border-radius: 4px;
-        }
-        .polaroid:hover {
-            transform: scale(1.05);
-            box-shadow: 0 10px 20px rgba(0,0,0,0.15);
-            z-index: 10;
-        }
-        .polaroid img {
-            width: 100%;
-            height: auto; /* Maintain aspect ratio */
-            object-fit: cover;
-            border-radius: 2px;
-            border: 1px solid #fce7f3; /* Faint pink border on image */
-        }
-        .polaroid-caption {
-            position: absolute;
-            bottom: 0.75rem;
-            left: 1rem;
-            right: 1rem;
-            text-align: center;
-            font-family: 'Dancing Script', cursive;
-            font-size: 1.5rem;
-            color: #E11D48; /* Hot pink color for caption */
-            overflow: hidden;
-            white-space: nowrap;
-            text-overflow: ellipsis;
-        }
-
-        /* --- Confetti CSS --- */
-        @keyframes confetti-fall {
-            0% { transform: translateY(-100%) rotateZ(0deg); opacity: 1; }
-            100% { transform: translateY(100vh) rotateZ(720deg); opacity: 0; }
-        }
-        .confetti {
-            position: fixed;
-            top: -20px;
-            width: 10px;
-            height: 10px;
-            background-color: #fca5a5; /* Light pink */
-            animation: confetti-fall var(--duration) linear infinite;
-            border-radius: 50%;
-            pointer-events: none;
-            z-index: 1000;
-        }
-        .confetti.square {
-            border-radius: 0;
-            background-color: #fda4af; /* Medium pink */
-        }
-        .confetti.triangle {
-            width: 0;
-            height: 0;
-            border-left: 5px solid transparent;
-            border-right: 5px solid transparent;
-            border-bottom: 10px solid #fb7185; /* Darker pink */
-            background-color: transparent;
-        }
-
-        /* --- Sparkle CSS --- */
-        @keyframes twinkle {
-            0% { opacity: 0.5; transform: scale(1); }
-            50% { opacity: 1; transform: scale(1.2); }
-            100% { opacity: 0.5; transform: scale(1); }
-        }
-        .sparkle {
-            position: fixed;
-            background: rgba(255, 255, 255, 0.8);
-            border-radius: 50%;
-            pointer-events: none;
-            box-shadow: 0 0 5px 3px rgba(255, 255, 255, 0.6);
-            animation: twinkle var(--sparkle-duration) ease-in-out infinite;
-            z-index: 100;
-        }
-
-        /* --- Love Letter Modal CSS --- */
-        /* --- Video Modal CSS --- */
-        #love-letter-modal, #video-modal {
-            transition: opacity 0.3s ease-in-out, visibility 0.3s ease-in-out;
-        }
-        .modal-overlay {
-            background-color: rgba(0, 0, 0, 0.6);
-            backdrop-filter: blur(5px);
-            transition: opacity 0.3s ease-in-out;
-        }
-        .modal-content {
-            background: linear-gradient(145deg, #fff8f8, #fff0f5);
-            border: 2px solid #fbcfe8;
-            transform: scale(0.95);
-            opacity: 0;
-            transition: transform 0.3s ease-out, opacity 0.3s ease-out;
-            position: relative; /* Ensure relative positioning */
-            border-radius: 1rem; /* Base rounding */
-            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
-        }
-        #love-letter-modal:not(.hidden) .modal-content,
-        #video-modal:not(.hidden) .modal-content {
-            transform: scale(1);
-            opacity: 1;
-        }
-        .modal-close-btn {
-            background-color: #fce7f3;
-            color: #db2777;
-            border-radius: 50%;
-            width: 36px;
-            height: 36px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 24px;
-            font-weight: bold;
-            transition: all 0.2s ease-in-out;
-            cursor: pointer; /* Add cursor pointer */
-            position: absolute; /* Position relative to modal-content */
-            top: 0.5rem; /* Adjust position */
-            right: 0.5rem;
-            z-index: 150; /* Above content */
-        }
-        .modal-close-btn:hover {
-            background-color: #fbcfe8;
-            transform: rotate(90deg) scale(1.1);
-        }
-        .letter-text {
-            line-height: 1.75;
-            color: #be185d;
-        }
-        .letter-text::first-letter {
-            font-family: 'Dancing Script', cursive;
-            font-size: 3.5rem;
-            color: #e11d48;
-            float: left;
-            line-height: 1;
-            margin-right: 0.5rem;
-            margin-top: 0.25rem;
-        }
-
-        /* --- Bucket List CSS --- */
-        .bucket-list li {
-            position: relative;
-            padding-left: 2.5rem; /* Space for custom icon */
-            font-size: 1.125rem; /* 18px */
-            padding-bottom: 1rem;
-            color: #831843;
-        }
-        .bucket-list li::before {
-            content: '♡'; /* Heart icon */
-            position: absolute;
-            left: 0;
-            top: 0;
-            font-family: 'Dancing Script', cursive;
-            color: #e11d48;
-            font-size: 1.75rem; /* 28px */
-            line-height: 1;
-        }
-
-        /* --- Timeline CSS --- */
-        .timeline-container {
-            position: relative;
-            padding-left: 2rem; /* Space for the line and dots */
-        }
-        /* The vertical line */
-        .timeline-container::before {
-            content: '';
-            position: absolute;
-            left: 10px; /* Aligns with the center of the dot */
-            top: 10px;
-            bottom: 10px;
-            width: 4px;
-            background: #fbcfe8; /* Light pink line */
-            border-radius: 2px;
-        }
-        .timeline-item {
-            position: relative;
-            margin-bottom: 1.5rem; /* 24px */
-        }
-        /* Last item should not have margin */
-        .timeline-item:last-child {
-            margin-bottom: 0;
-        }
-        .timeline-dot {
-            position: absolute;
-            left: -1px; /* (10px line width / 2) - (16px dot width / 2) */
-            top: 8px;
-            width: 16px;
-            height: 16px;
-            background: #e11d48; /* Hot pink */
-            border: 3px solid white;
-            border-radius: 50%;
-            z-index: 10;
-        }
-        .timeline-content {
-            background: #fff8f8;
-            padding: 0.75rem 1rem;
-            border-radius: 8px;
-            border: 1px solid #fce7f3;
-        }
-        .timeline-date {
-            font-size: 0.875rem; /* 14px */
-            font-weight: 600;
-            color: #db2777;
-        }
-        .timeline-title {
-            font-size: 1.25rem; /* 20px */
-            font-family: 'Dancing Script', cursive;
-            color: #831843;
-            margin-top: 0.25rem;
-        }
-        .timeline-desc {
-            font-size: 0.875rem;
-            color: #be185d;
-            margin-top: 0.25rem;
-        }
-
-        /* --- Little Things Counter CSS --- */
-        .counter-item {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            text-align: center;
-            background: #fff8f8;
-            padding: 1rem;
-            border-radius: 12px;
-            border: 1px solid #fce7f3;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.05);
-        }
-        .counter-number {
-            font-family: 'Dancing Script', cursive;
-            font-size: 2.5rem; /* 40px */
-            color: #e11d48;
-            line-height: 1.1;
-            /* Allow text wrapping for longer content */
-            word-break: break-word;
-            hyphens: auto;
-        }
-        .counter-label {
-            font-size: 0.875rem; /* 14px */
-            color: #831843;
-            margin-top: 0.25rem;
-        }
-
-        /* --- Anniversary Message GIF CSS --- */
-        @keyframes pulse-grow {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.05); }
-            100% { transform: scale(1); }
-        }
-        #anniversary-message {
-            display: flex;
-            flex-direction: column; /* Stack image and text */
-            align-items: center;
-            justify-content: center;
-            gap: 0.5rem; /* Space between gif and text */
-            margin-top: 3rem;
-            text-align: center;
-            padding: 1.5rem;
-            background: linear-gradient(45deg, #fff0f5, #ffe4e1);
-            border-radius: 20px;
-            box-shadow: 0 8px 16px rgba(236, 72, 153, 0.2); /* Pink shadow */
-            max-width: fit-content; /* Adjust to content */
-            margin-left: auto;
-            margin-right: auto;
-            border: 2px solid #fbcfe8;
-            animation: pulse-grow 2s infinite ease-in-out;
-        }
-        #anniversary-message img {
-            width: 80px; /* Adjust size as needed */
-            height: auto;
-        }
-        #anniversary-message p {
-            font-family: 'Dancing Script', cursive;
-            font-size: 2.25rem; /* text-4xl */
-            color: #E11D48; /* Hot pink */
-            line-height: 1.2;
-        }
-
-        /* --- Special Place Map CSS --- */
-        #special-place-map iframe {
-            border-radius: 12px;
-            border: 2px solid #fbcfe8;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-            width: 100%; /* Make map responsive */
-            aspect-ratio: 16 / 9; /* Maintain aspect ratio */
-            max-width: 600px; /* Optional max width */
-            margin-left: auto;
-            margin-right: auto;
-        }
-
-        /* --- VIDEO DUCK CSS --- */
-        #video-duck-container {
-            position: fixed;
-            bottom: 1.5rem; /* 24px */
-            right: 1.5rem; /* 24px */
-            z-index: 50; /* Above content, below modals */
-            cursor: pointer;
-            text-align: center;
-            transition: transform 0.3s ease-in-out;
-        }
-        #video-duck-container:hover {
-            transform: scale(1.1);
-        }
-        .duck-banner {
-            background-color: #f472b6; /* Pink */
-            color: white;
-            padding: 0.25rem 0.75rem;
-            border-radius: 6px;
-            font-size: 0.75rem; /* 12px */
-            font-weight: 600;
-            font-family: 'Nunito', sans-serif;
-            margin-bottom: 0.25rem;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-            display: inline-block; /* Fit content */
-        }
-        .duck-svg {
-            width: 60px; /* Adjust size as needed */
-            height: auto;
-            filter: drop-shadow(0 4px 6px rgba(0,0,0,0.1));
-        }
-
-        /* Video Modal Styles */
-        .video-modal-content {
-            /* Inherits base styles from .modal-content via classList */
-            width: 90%;
-            max-width: 800px; /* Adjust max width for video */
-            padding: 1rem; /* Less padding for video */
-            background: #fff8f8; /* Slightly different background */
-        }
-        .video-player-wrapper {
-            position: relative;
-            padding-bottom: 56.25%; /* 16:9 Aspect Ratio */
-            height: 0;
-            overflow: hidden;
-            border-radius: 10px; /* Rounded corners for player */
-            border: 2px solid #fbcfe8;
-        }
-        .video-player-wrapper iframe {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            border: none;
-        }
-        /* Close button positioned inside video content - Adjusted slightly */
-        .video-modal-content .modal-close-btn {
-            top: -10px; /* Adjust position */
-            right: -10px;
-        }
+        /* Floating Hearts */
+        @keyframes fall { 0% { transform: translateY(-10vh) rotate(0deg); opacity: 1; } 100% { transform: translateY(110vh) rotate(360deg); opacity: 0; } }
+        .heart { position: fixed; top: 0; color: #F472B6; animation: fall 10s linear infinite; font-size: 24px; pointer-events: none; z-index: 9999; }
+        /* Moon Feature */
+        .moon-date-input { border: 2px solid #FBCFE8; padding: 0.5rem 1rem; border-radius: 99px; font-family: 'Nunito', sans-serif; color: #DB2777; outline: none; transition: all 0.3s; }
+        .moon-date-input:focus { border-color: #F472B6; box-shadow: 0 0 10px #FBCFE8; }
+        .moon-date-input::-webkit-calendar-picker-indicator { cursor: pointer; filter: invert(50%) sepia(50%) saturate(5000%) hue-rotate(300deg); }
+        /* Polaroid Grid */
+        .polaroid { background: white; padding: 1rem; padding-bottom: 3.5rem; box-shadow: 0 4px 8px rgba(0,0,0,0.08); transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out; position: relative; break-inside: avoid; margin-bottom: 1.5rem; border-radius: 4px; }
+        .polaroid:hover { transform: scale(1.05); box-shadow: 0 10px 20px rgba(0,0,0,0.15); z-index: 10; }
+        .polaroid img { width: 100%; height: auto; object-fit: cover; border-radius: 2px; border: 1px solid #fce7f3; }
+        .polaroid-caption { position: absolute; bottom: 0.75rem; left: 1rem; right: 1rem; text-align: center; font-family: 'Caveat', cursive; font-size: 1.5rem; color: #E11D48; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; } /* Changed font */
+        /* Confetti */
+        @keyframes confetti-fall { 0% { transform: translateY(-100%) rotateZ(0deg); opacity: 1; } 100% { transform: translateY(100vh) rotateZ(720deg); opacity: 0; } }
+        .confetti { position: fixed; top: -20px; width: 10px; height: 10px; background-color: #fca5a5; animation: confetti-fall var(--duration) linear infinite; border-radius: 50%; pointer-events: none; z-index: 1000; }
+        .confetti.square { border-radius: 0; background-color: #fda4af; }
+        .confetti.triangle { width: 0; height: 0; border-left: 5px solid transparent; border-right: 5px solid transparent; border-bottom: 10px solid #fb7185; background-color: transparent; }
+        /* Sparkles */
+        @keyframes twinkle { 0% { opacity: 0.5; transform: scale(1); } 50% { opacity: 1; transform: scale(1.2); } 100% { opacity: 0.5; transform: scale(1); } }
+        .sparkle { position: fixed; background: rgba(255, 255, 255, 0.8); border-radius: 50%; pointer-events: none; box-shadow: 0 0 5px 3px rgba(255, 255, 255, 0.6); animation: twinkle var(--sparkle-duration) ease-in-out infinite; z-index: 100; }
+        /* Modals (Love Letter & Video) */
+        #love-letter-modal, #video-modal { transition: opacity 0.3s ease-in-out, visibility 0.3s ease-in-out; }
+        .modal-overlay { background-color: rgba(0, 0, 0, 0.6); backdrop-filter: blur(5px); transition: opacity 0.3s ease-in-out; }
+        .modal-content { background: linear-gradient(145deg, #fff8f8, #fff0f5); border: 2px solid #fbcfe8; transform: scale(0.95); opacity: 0; transition: transform 0.3s ease-out, opacity 0.3s ease-out; position: relative; border-radius: 1rem; box-shadow: 0 10px 25px rgba(0,0,0,0.1); }
+        #love-letter-modal:not(.hidden) .modal-content, #video-modal:not(.hidden) .modal-content { transform: scale(1); opacity: 1; }
+        .modal-close-btn { background-color: #fce7f3; color: #db2777; border-radius: 50%; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; font-size: 24px; font-weight: bold; transition: all 0.2s ease-in-out; cursor: pointer; position: absolute; top: 0.5rem; right: 0.5rem; z-index: 150; }
+        .modal-close-btn:hover { background-color: #fbcfe8; transform: rotate(90deg) scale(1.1); }
+        .letter-text { line-height: 1.75; color: #be185d; }
+        .letter-text::first-letter { font-family: 'Caveat', cursive; font-size: 3.5rem; color: #e11d48; float: left; line-height: 1; margin-right: 0.5rem; margin-top: 0.25rem; } /* Changed font */
+        /* Bucket List */
+        .bucket-list li { position: relative; padding-left: 2.5rem; font-size: 1.125rem; padding-bottom: 1rem; color: #831843; }
+        .bucket-list li::before { content: '♡'; position: absolute; left: 0; top: 0; font-family: 'Caveat', cursive; color: #e11d48; font-size: 1.75rem; line-height: 1; } /* Changed font */
+        /* Timeline */
+        .timeline-container { position: relative; padding-left: 2rem; }
+        .timeline-container::before { content: ''; position: absolute; left: 10px; top: 10px; bottom: 10px; width: 4px; background: #fbcfe8; border-radius: 2px; }
+        .timeline-item { position: relative; margin-bottom: 1.5rem; }
+        .timeline-item:last-child { margin-bottom: 0; }
+        .timeline-dot { position: absolute; left: -1px; top: 8px; width: 16px; height: 16px; background: #e11d48; border: 3px solid white; border-radius: 50%; z-index: 10; }
+        .timeline-content { background: #fff8f8; padding: 0.75rem 1rem; border-radius: 8px; border: 1px solid #fce7f3; }
+        .timeline-date { font-size: 0.875rem; font-weight: 600; color: #db2777; }
+        .timeline-title { font-size: 1.25rem; font-family: 'Caveat', cursive; color: #831843; margin-top: 0.25rem; } /* Changed font */
+        .timeline-desc { font-size: 0.875rem; color: #be185d; margin-top: 0.25rem; }
+        /* Little Things Counter */
+        .counter-item { display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; background: #fff8f8; padding: 1rem; border-radius: 12px; border: 1px solid #fce7f3; box-shadow: 0 4px 8px rgba(0,0,0,0.05); }
+        .counter-number { font-family: 'Caveat', cursive; font-size: 2.5rem; color: #e11d48; line-height: 1.1; word-break: break-word; hyphens: auto; } /* Changed font */
+        .counter-label { font-size: 0.875rem; color: #831843; margin-top: 0.25rem; }
+        /* Anniversary Message */
+        @keyframes pulse-grow { 0% { transform: scale(1); } 50% { transform: scale(1.05); } 100% { transform: scale(1); } }
+        #anniversary-message { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 0.5rem; margin-top: 3rem; text-align: center; padding: 1.5rem; background: linear-gradient(45deg, #fff0f5, #ffe4e1); border-radius: 20px; box-shadow: 0 8px 16px rgba(236, 72, 153, 0.2); max-width: fit-content; margin-left: auto; margin-right: auto; border: 2px solid #fbcfe8; animation: pulse-grow 2s infinite ease-in-out; }
+        #anniversary-message img { width: 80px; height: auto; }
+        #anniversary-message p { font-family: 'Caveat', cursive; font-size: 2.25rem; color: #E11D48; line-height: 1.2; } /* Changed font */
+        /* Special Place Map */
+        #special-place-map iframe { border-radius: 12px; border: 2px solid #fbcfe8; box-shadow: 0 4px 8px rgba(0,0,0,0.1); width: 100%; aspect-ratio: 16 / 9; max-width: 600px; margin-left: auto; margin-right: auto; }
+        /* Video Duck */
+        #video-duck-container { position: fixed; bottom: 1.5rem; right: 1.5rem; z-index: 50; cursor: pointer; text-align: center; transition: transform 0.3s ease-in-out; }
+        #video-duck-container:hover { transform: scale(1.1); }
+        .duck-banner { background-color: #f472b6; color: white; padding: 0.25rem 0.75rem; border-radius: 6px; font-size: 0.75rem; font-weight: 600; font-family: 'Nunito', sans-serif; margin-bottom: 0.25rem; box-shadow: 0 2px 4px rgba(0,0,0,0.1); display: inline-block; }
+        .duck-svg { width: 60px; height: auto; filter: drop-shadow(0 4px 6px rgba(0,0,0,0.1)); }
+        /* Video Modal */
+        .video-modal-content { width: 90%; max-width: 800px; padding: 1rem; background: #fff8f8; }
+        .video-player-wrapper { position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; border-radius: 10px; border: 2px solid #fbcfe8; }
+        .video-player-wrapper iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none; }
+        .video-modal-content .modal-close-btn { top: -10px; right: -10px; }
+        /* Reasons I Love You */
+        .reason-reveal-item { text-align: center; margin-bottom: 1.5rem; }
+        .reason-trigger { display: inline-flex; align-items: center; justify-content: center; background-color: #fbcfe8; color: #db2777; border-radius: 50%; width: 60px; height: 60px; font-size: 1.75rem; cursor: pointer; transition: all 0.3s ease-in-out; box-shadow: 0 4px 8px rgba(0,0,0,0.08); border: 2px solid white; }
+        .reason-trigger:hover { background-color: #f9a8d4; transform: scale(1.1); box-shadow: 0 6px 12px rgba(0,0,0,0.12); }
+        .reason-trigger svg { width: 60%; height: 60%; }
+        .reason-text { max-height: 0; overflow: hidden; opacity: 0; transition: max-height 0.5s ease-out, opacity 0.5s ease-out, margin-top 0.5s ease-out; margin-top: 0; font-size: 1.125rem; color: #831843; font-family: 'Caveat', cursive; } /* Changed font */
+        .reason-text.revealed { max-height: 100px; opacity: 1; margin-top: 0.75rem; }
+        /* Second Video Section */
+        #second-video-section iframe { border-radius: 12px; border: 2px solid #fbcfe8; box-shadow: 0 4px 8px rgba(0,0,0,0.1); width: 100%; aspect-ratio: 16 / 9; max-width: 900px; /* Increased max width */ margin-left: auto; margin-right: auto; }
 
     </style>
 </head>
 <body class="text-gray-700">
 
-    <!-- Container for floating elements (hearts, confetti, sparkles) -->
+    <!-- Container for floating elements -->
     <div id="animation-container" class="absolute inset-0 overflow-hidden pointer-events-none"></div>
 
-    <!-- Heart Icon for SVG use -->
-    <svg class="hidden">
-        <symbol id="icon-heart" viewBox="0 0 24 24">
-            <path fill="currentColor" d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
-        </symbol>
-    </svg>
+    <!-- Heart Icon SVG -->
+    <svg class="hidden"> <symbol id="icon-heart" viewBox="0 0 24 24"> <path fill="currentColor" d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/> </symbol> </svg>
 
     <div class="container mx-auto px-4 py-8 md:py-12 relative z-10">
 
         <header class="text-center mb-10">
-            <h1 class="title-font text-5xl md:text-7xl text-pink-500">Our Love Story</h1>
-            <p class="text-lg text-gray-500 mt-2">Time, Tides & Memories</p>
-
-            <!-- === TIME TOGETHER COUNTER === -->
-            <div class="mt-8">
-                <p class="text-lg text-gray-600">Our time together:</p>
-                <h2 id="love-timer" class="text-3xl md:text-4xl font-semibold text-pink-600 mt-1" style="font-family: 'Nunito', sans-serif;">
-                    Loading...
-                </h2>
-            </div>
-
-            <!-- === LOVE LETTER BUTTON === -->
-            <div class="mt-8">
-                <button id="open-letter-btn" class="inline-flex items-center gap-3 bg-pink-500 text-white font-semibold px-8 py-3 rounded-full cursor-pointer shadow-lg hover:bg-pink-600 transition-all duration-300 transform hover:scale-105">
-                    <svg class="w-6 h-6 animate-pulse"><use xlink:href="#icon-heart"></use></svg>
-                    <span>A Letter For My Love</span>
-                </button>
-            </div>
+             <h1 class="title-font text-5xl md:text-7xl text-pink-500">Our Love Story</h1>
+             <p class="text-lg text-gray-500 mt-2">Time, Tides & Memories</p>
+             <div class="mt-8"> <p class="text-lg text-gray-600">Our time together:</p> <h2 id="love-timer" class="text-3xl md:text-4xl font-semibold text-pink-600 mt-1" style="font-family: 'Nunito', sans-serif;"> Loading... </h2> </div>
+             <div class="mt-8"> <button id="open-letter-btn" class="inline-flex items-center gap-3 bg-pink-500 text-white font-semibold px-8 py-3 rounded-full cursor-pointer shadow-lg hover:bg-pink-600 transition-all duration-300 transform hover:scale-105"> <svg class="w-6 h-6 animate-pulse"><use xlink:href="#icon-heart"></use></svg> <span>A Letter For My Love</span> </button> </div>
         </header>
 
-        <!-- === MOON PHASE FEATURE === -->
         <section class="text-center mb-12 flex flex-col justify-center items-center gap-6 bg-white/70 backdrop-blur-sm p-8 rounded-2xl shadow-lg border border-pink-100">
-            <h3 class="title-font text-3xl text-pink-500">Moon Phase Finder</h3>
-            <p class="text-gray-600">Compare moon phases for two different dates!</p>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 w-full max-w-2xl">
-                <div class="flex flex-col items-center gap-2">
-                    <label for="moon-date-input-1" class="text-lg text-gray-700">Date 1:</label>
-                    <input type="date" id="moon-date-input-1" class="moon-date-input">
-                    <div id="moon-result-1" class="mt-2 text-center h-28"></div>
-                </div>
-                <div class="flex flex-col items-center gap-2">
-                    <label for="moon-date-input-2" class="text-lg text-gray-700">Date 2:</label>
-                    <input type="date" id="moon-date-input-2" class="moon-date-input">
-                    <div id="moon-result-2" class="mt-2 text-center h-28"></div>
-                </div>
-            </div>
-            <button id="moon-check-btn" class="inline-flex items-center gap-3 bg-pink-400 text-white font-semibold px-8 py-3 rounded-full cursor-pointer shadow-lg hover:bg-pink-500 transition-all duration-300 transform hover:scale-105">
-                <svg class="w-6 h-6"><use xlink:href="#icon-heart"></use></svg>
-                <span>Check Moon Phases</span>
-            </button>
+             <h3 class="title-font text-3xl text-pink-500">Moon Phase Finder</h3> <p class="text-gray-600">Compare moon phases for two different dates!</p>
+             <div class="grid grid-cols-1 md:grid-cols-2 gap-8 w-full max-w-2xl">
+                 <div class="flex flex-col items-center gap-2"> <label for="moon-date-input-1" class="text-lg text-gray-700">Date 1:</label> <input type="date" id="moon-date-input-1" class="moon-date-input"> <div id="moon-result-1" class="mt-2 text-center h-28"></div> </div>
+                 <div class="flex flex-col items-center gap-2"> <label for="moon-date-input-2" class="text-lg text-gray-700">Date 2:</label> <input type="date" id="moon-date-input-2" class="moon-date-input"> <div id="moon-result-2" class="mt-2 text-center h-28"></div> </div>
+             </div>
+             <button id="moon-check-btn" class="inline-flex items-center gap-3 bg-pink-400 text-white font-semibold px-8 py-3 rounded-full cursor-pointer shadow-lg hover:bg-pink-500 transition-all duration-300 transform hover:scale-105"> <svg class="w-6 h-6"><use xlink:href="#icon-heart"></use></svg> <span>Check Moon Phases</span> </button>
         </section>
 
-        <!-- === BUCKET LIST SECTION === -->
         <section class="mb-12 flex flex-col justify-center items-center gap-6 bg-white/70 backdrop-blur-sm p-8 rounded-2xl shadow-lg border border-pink-100">
-            <h3 class="title-font text-3xl text-pink-500">Our Next Adventures</h3>
-            <p class="text-gray-600">A few things I can't wait to do with you...</p>
-            <ul class="bucket-list mt-4 text-left max-w-md w-full">
+             <h3 class="title-font text-3xl text-pink-500">Our Next Adventures</h3> <p class="text-gray-600">A few things I can't wait to do with you...</p>
+             <ul class="bucket-list mt-4 text-left max-w-md w-full">
                  <li>Go on a date in Hayes without being in fear of being spotted</li>
                  <li>Try to cook together, and when i get food posioning, watch you cook.</li>
                  <li>Go to a new country together, basically anywhere but sri lanka</li>
                  <li>Go shopping together.</li>
                  <li>Go back to the fields for nostalgia.</li>
                  <li>Boing Boing Boing 😏.</li>
-            </ul>
+             </ul>
         </section>
 
-        <!-- === TIMELINE SECTION === -->
         <section id="love-timeline" class="mb-12 flex flex-col justify-center items-center gap-6 bg-white/70 backdrop-blur-sm p-8 rounded-2xl shadow-lg border border-pink-100">
              <h3 class="title-font text-3xl text-pink-500">A Timeline of Our Love</h3>
              <div class="timeline-container mt-4 w-full max-w-md">
@@ -506,7 +141,6 @@
              </div>
         </section>
 
-        <!-- === LITTLE THINGS COUNTER === -->
         <section id="little-things" class="mb-12 flex flex-col justify-center items-center gap-6 bg-white/70 backdrop-blur-sm p-8 rounded-2xl shadow-lg border border-pink-100">
              <h3 class="title-font text-3xl text-pink-500">Just a Few Little Things...</h3>
              <div class="grid grid-cols-2 md:grid-cols-4 gap-6 mt-4 w-full max-w-lg">
@@ -515,20 +149,43 @@
                  <div class="counter-item"> <span class="counter-number">1 </span> <span class="counter-label">Stolen Hoodies 😉</span> </div>
                  <div class="counter-item"> <span class="counter-number">∞</span> <span class="counter-label">Laughs & Smiles</span> </div>
                  <div class="counter-item"> <span class="counter-number">∞</span> <span class="counter-label">"Just say you hate me" said</span> </div>
-                 <div class="counter-item"> <span class="counter-number">ฅ˙Ⱉ˙ฅ rawr!</span> <span class="counter-label">GRRRRRRR</span> </div>
+                 <div class="counter-item"> <span class="counter-number"> 🦖 rawr!</span> <span class="counter-label">GRRRRRRR</span> </div>
                  <div class="counter-item"> <span class="counter-number">0 🥺</span> <span class="counter-label">Amount of times i have been invited to any events at auntys house</span> </div>
                  <div class="counter-item"> <span class="counter-number">Not enough</span> <span class="counter-label">Phone calls</span> </div>
              </div>
         </section>
 
-        <!-- === SPECIAL PLACE MAP SECTION === -->
+        <section id="reasons-love" class="mb-12 flex flex-col justify-center items-center gap-6 bg-white/70 backdrop-blur-sm p-8 rounded-2xl shadow-lg border border-pink-100">
+            <h3 class="title-font text-3xl text-pink-500">12 Reasons why i love you bubba ❤️❤️❤️...</h3>
+            <p class="text-gray-600">Click a heart to see!</p>
+            <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-x-4 gap-y-6 mt-6 w-full max-w-xl">
+                <!-- Reason 1 --> <div class="reason-reveal-item"> <button class="reason-trigger" data-reason-target="reason-1"> <svg><use xlink:href="#icon-heart"></use></svg> </button> <p id="reason-1" class="reason-text">...You have the most gorgeous smile!😘.</p> </div>
+                <!-- Reason 2 --> <div class="reason-reveal-item"> <button class="reason-trigger" data-reason-target="reason-2"> <svg><use xlink:href="#icon-heart"></use></svg> </button> <p id="reason-2" class="reason-text">...you always know how to make me laugh.</p> </div>
+                <!-- Reason 3 --> <div class="reason-reveal-item"> <button class="reason-trigger" data-reason-target="reason-3"> <svg><use xlink:href="#icon-heart"></use></svg> </button> <p id="reason-3" class="reason-text">...Your gorgeous puppy dog eyes. AWWW 😘😘😘.</p> </div>
+                <!-- Reason 4 --> <div class="reason-reveal-item"> <button class="reason-trigger" data-reason-target="reason-4"> <svg><use xlink:href="#icon-heart"></use></svg> </button> <p id="reason-4" class="reason-text">...YOUR SO SMOL AND PETITE AND CUTE  😘😘.</p> </div>
+                <!-- Reason 5 --> <div class="reason-reveal-item"> <button class="reason-trigger" data-reason-target="reason-5"> <svg><use xlink:href="#icon-heart"></use></svg> </button> <p id="reason-5" class="reason-text">...I can always be autistic around you and you join in </p> </div>
+                <!-- Reason 6 --> <div class="reason-reveal-item"> <button class="reason-trigger" data-reason-target="reason-6"> <svg><use xlink:href="#icon-heart"></use></svg> </button> <p id="reason-6" class="reason-text">...the way you look at me, esepcially when your ovulating</p> </div>
+                <!-- Reason 7 --> <div class="reason-reveal-item"> <button class="reason-trigger" data-reason-target="reason-7"> <svg><use xlink:href="#icon-heart"></use></svg> </button> <p id="reason-7" class="reason-text">...Talking with you and having fun, just seems easy bubba 😘</p> </div>
+                <!-- Reason 8 --> <div class="reason-reveal-item"> <button class="reason-trigger" data-reason-target="reason-8"> <svg><use xlink:href="#icon-heart"></use></svg> </button> <p id="reason-8" class="reason-text">...your hugs feel like home, but you always disappear for some reason</p> </div>
+                <!-- Reason 9 --> <div class="reason-reveal-item"> <button class="reason-trigger" data-reason-target="reason-9"> <svg><use xlink:href="#icon-heart"></use></svg> </button> <p id="reason-9" class="reason-text">...your always holding me... by the balls </p> </div>
+                <!-- Reason 10 --> <div class="reason-reveal-item"> <button class="reason-trigger" data-reason-target="reason-10"> <svg><use xlink:href="#icon-heart"></use></svg> </button> <p id="reason-10" class="reason-text">...our silly inside jokes.</p> </div>
+                <!-- Reason 11 --> <div class="reason-reveal-item"> <button class="reason-trigger" data-reason-target="reason-11"> <svg><use xlink:href="#icon-heart"></use></svg> </button> <p id="reason-11" class="reason-text">...you're my best friend, dont tell kausic 🤣🤣🤣</p> </div>
+                <!-- Reason 12 --> <div class="reason-reveal-item"> <button class="reason-trigger" data-reason-target="reason-12"> <svg><use xlink:href="#icon-heart"></use></svg> </button> <p id="reason-12" class="reason-text">...simply because you're you. ♡</p> </div>
+            </div>
+        </section>
+
         <section id="special-place-map" class="mb-12 flex flex-col justify-center items-center gap-6 bg-white/70 backdrop-blur-sm p-8 rounded-2xl shadow-lg border border-pink-100">
              <h3 class="title-font text-3xl text-pink-500">Our Special Place</h3>
              <p class="text-gray-600">The theory test centre... our first date that wasnt a date 😉</p>
              <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2481.2708660673616!2d-0.48036122241007184!3d51.544932007959545!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x48766fdc724ee11b%3A0x3a87919af11f233d!2sDVSA%20Theory%20Test%20Centre.!5e0!3m2!1sen!2suk!4v1761590734762!5m2!1sen!2suk" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
         </section>
 
-        <!-- === PHOTO GALLERY === -->
+        <section id="second-video-section" class="mb-12 flex flex-col justify-center items-center gap-6 bg-white/70 backdrop-blur-sm p-8 rounded-2xl shadow-lg border border-pink-100">
+            <h3 class="title-font text-3xl text-pink-500">Another Special Moment</h3>
+            <p class="text-gray-600">My lil shrexxy bubs, being a baddie ...</p>
+            <iframe src="https://streamable.com/e/ixune8?" title="Second Special Video" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen> </iframe>
+        </section>
+
         <main class="mt-16">
             <h2 class="title-font text-4xl text-pink-500 text-center mb-10">Our Memory Lane</h2>
             <div id="memory-grid" class="columns-1 sm:columns-2 md:columns-3 lg:columns-4 gap-6">
@@ -537,18 +194,12 @@
             </div>
         </main>
 
-        <!-- === ANNIVERSARY MESSAGE GIF === -->
-        <div id="anniversary-message">
-            <img src="https://media0.giphy.com/media/v1.Y2lkPTc5MGI3NjExZmZ4Mm5ranBhbnB3bDM5Y3V4bG16d2dpamo3bTFieTZyNDM4OHA3aiZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/F3OHH5KL7po9qfHOJc/giphy.gif" alt="Cutesy Heart">
-            <p>Happy 1 Year Anniversary, Bubs!</p>
-        </div>
+        <div id="anniversary-message"> <img src="https://media0.giphy.com/media/v1.Y2lkPTc5MGI3NjExZmZ4Mm5ranBhbnB3bDM5Y3V4bG16d2dpamo3bTFieTZyNDM4OHA3aiZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/F3OHH5KL7po9qfHOJc/giphy.gif" alt="Cutesy Heart"> <p>Happy 1 Year Anniversary, Bubs!</p> </div>
 
-        <footer class="text-center mt-16 py-6 border-t border-pink-100">
-             <p class="text-pink-400 title-font text-2xl">Always & Forever</p>
-        </footer>
+        <footer class="text-center mt-16 py-6 border-t border-pink-100"> <p class="text-pink-400 title-font text-2xl">Always & Forever</p> </footer>
     </div>
 
-    <!-- === LOVE LETTER MODAL === -->
+    <!-- Love Letter Modal -->
     <div id="love-letter-modal" class="fixed inset-0 w-full h-full flex items-center justify-center z-[100] hidden" aria-labelledby="modal-title" role="dialog" aria-modal="true">
         <div id="modal-overlay-letter" class="modal-overlay fixed inset-0 w-full h-full"></div>
         <div class="modal-content relative w-11/12 max-w-2xl p-6 sm:p-10 rounded-2xl shadow-2xl overflow-y-auto" style="max-height: 90vh;">
@@ -558,19 +209,13 @@
         </div>
     </div>
 
-    <!-- === VIDEO DUCK HTML === -->
+    <!-- Video Duck HTML -->
     <div id="video-duck-container" aria-label="Click me for a surprise video!">
         <span class="duck-banner">Click Me!</span>
-        <svg class="duck-svg" viewBox="0 0 100 100" fill="#FFD700" xmlns="http://www.w3.org/2000/svg">
-            <ellipse cx="50" cy="65" rx="30" ry="25" fill="#FFDA63"/>
-            <circle cx="70" cy="40" r="20" fill="#FFDA63"/>
-            <path d="M85 38 C 95 35, 98 45, 88 45 Z" fill="#FFA500"/>
-            <circle cx="75" cy="35" r="3" fill="#333"/>
-            <path d="M40 60 Q 20 70, 40 80 Q 50 70, 40 60 Z" fill="#FFE48A"/>
-        </svg>
+        <svg class="duck-svg" viewBox="0 0 100 100" fill="#FFD700" xmlns="http://www.w3.org/2000/svg"> <ellipse cx="50" cy="65" rx="30" ry="25" fill="#FFDA63"/> <circle cx="70" cy="40" r="20" fill="#FFDA63"/> <path d="M85 38 C 95 35, 98 45, 88 45 Z" fill="#FFA500"/> <circle cx="75" cy="35" r="3" fill="#333"/> <path d="M40 60 Q 20 70, 40 80 Q 50 70, 40 60 Z" fill="#FFE48A"/> </svg>
     </div>
 
-    <!-- === VIDEO MODAL HTML === -->
+    <!-- Video Modal HTML -->
     <div id="video-modal" class="fixed inset-0 w-full h-full flex items-center justify-center z-[110] hidden" aria-labelledby="video-modal-title" role="dialog" aria-modal="true">
         <div id="modal-overlay-video" class="modal-overlay fixed inset-0 w-full h-full"></div>
         <div class="modal-content video-modal-content relative">
@@ -584,40 +229,15 @@
 
 
     <script>
-        // ##################################################################
-        // ### YOUR PERSONALIZED PHOTO LIST ###
-        // ##################################################################
-        const ourMemoriesData = [
-            { image: "https://i.postimg.cc/NFbV91GK/20250624-202537.jpg", caption: "PROM!!" },
-            { image: "https://i.postimg.cc/gcK1TPVK/20250209-102048.jpg", caption: "Beach Heart!!" },
-            { image: "https://i.postimg.cc/wMFPyhqZ/20250122-155915.jpg", caption: "B&M!!" },
-            { image: "https://i.postimg.cc/bwZMrDKW/20250927-111513.jpg", caption: "First Night Over" },
-            { image: "https://i.postimg.cc/SRV52WQX/20250624-212221.jpg", caption: "MY Lil Bubs" },
-            { image: "https://i.postimg.cc/T1QSLr2p/20250624-205657.jpg", caption: "Just Us" },
-            { image: "https://i.postimg.cc/3R7f9CZw/Snapchat-1173315409.jpg", caption: "Just Us" },
-            { image: "https://i.postimg.cc/Y9kD8fx0/Snapchat-1268567492.jpg", caption: "Just Us" },
-            { image: "https://i.postimg.cc/4dZ2wb1n/Snapchat-1349925705.jpg", caption: "Just Us" },
-            { image: "https://i.postimg.cc/j5Xg1w8T/Snapchat-1388847304.jpg", caption: "Just Us" },
-            { image: "https://i.postimg.cc/sXyHK948/Snapchat-14588284.jpg", caption: "Just Ufs" },
-            { image: "https://i.postimg.cc/bJTC5D68/Snapchat-1591919019.jpg", caption: "Just Us" },
-            { image: "https://i.postimg.cc/ydBpnXTq/Snapchat-232822899.jpg", caption: "Just Us" },
-            { image: "https://i.postimg.cc/fLZq5jfp/Snapchat-347195568.jpg", caption: "BUBBA!" },
-            { image: "https://i.postimg.cc/G2rgzJjh/Snapchat-874019607.jpg", caption: "Just Us" },
-            { image: "https://i.postimg.cc/rmcZgC9m/Snapchat-952431788.jpg", caption: "BUBS" },
-            { image: "https://i.postimg.cc/59p9BsmX/Snapchat-1948095006.jpg", caption: "HEHE" },
-            { image: "https://i.postimg.cc/wxFxXwkt/Snapchat-1989754270.jpg", caption: "FROM OUR FIRST UNOFFICAL DATE!" },
-            { image: "https://i.postimg.cc/DynTMLBS/Snapchat-1432429687.jpg", caption: "FIELDS" },
-            { image: "https://i.postimg.cc/3JYTcmnv/Snapchat-1496975889.jpg", caption: "The day u broke my hear :(" },
-        ];
-        // ##################################################################
+        // Photo List
+        const ourMemoriesData = [ { image: "https://i.postimg.cc/NFbV91GK/20250624-202537.jpg", caption: "PROM!!" }, { image: "https://i.postimg.cc/gcK1TPVK/20250209-102048.jpg", caption: "Beach Heart!!" }, { image: "https://i.postimg.cc/wMFPyhqZ/20250122-155915.jpg", caption: "B&M!!" }, { image: "https://i.postimg.cc/bwZMrDKW/20250927-111513.jpg", caption: "First Night Over" }, { image: "https://i.postimg.cc/SRV52WQX/20250624-212221.jpg", caption: "MY Lil Bubs" }, { image: "https://i.postimg.cc/T1QSLr2p/20250624-205657.jpg", caption: "Just Us" }, { image: "https://i.postimg.cc/3R7f9CZw/Snapchat-1173315409.jpg", caption: "Just Us" }, { image: "https://i.postimg.cc/Y9kD8fx0/Snapchat-1268567492.jpg", caption: "Just Us" }, { image: "https://i.postimg.cc/4dZ2wb1n/Snapchat-1349925705.jpg", caption: "Just Us" }, { image: "https://i.postimg.cc/j5Xg1w8T/Snapchat-1388847304.jpg", caption: "Just Us" }, { image: "https://i.postimg.cc/sXyHK948/Snapchat-14588284.jpg", caption: "Just Ufs" }, { image: "https://i.postimg.cc/bJTC5D68/Snapchat-1591919019.jpg", caption: "Just Us" }, { image: "https://i.postimg.cc/ydBpnXTq/Snapchat-232822899.jpg", caption: "Just Us" }, { image: "https://i.postimg.cc/fLZq5jfp/Snapchat-347195568.jpg", caption: "BUBBA!" }, { image: "https://i.postimg.cc/G2rgzJjh/Snapchat-874019607.jpg", caption: "Just Us" }, { image: "https://i.postimg.cc/rmcZgC9m/Snapchat-952431788.jpg", caption: "BUBS" }, { image: "https://i.postimg.cc/59p9BsmX/Snapchat-1948095006.jpg", caption: "HEHE" }, { image: "https://i.postimg.cc/wxFxXwkt/Snapchat-1989754270.jpg", caption: "FROM OUR FIRST UNOFFICAL DATE!" }, { image: "https://i.postimg.cc/DynTMLBS/Snapchat-1432429687.jpg", caption: "FIELDS" }, { image: "https://i.postimg.cc/3JYTcmnv/Snapchat-1496975889.jpg", caption: "The day u broke my hear :(" }, ];
 
         // --- DOM Elements ---
         const animationContainer = document.getElementById('animation-container');
         const openLetterBtn = document.getElementById('open-letter-btn');
         const closeLetterBtn = document.getElementById('close-letter-btn');
         const loveLetterModal = document.getElementById('love-letter-modal');
-        // Corrected Overlay ID for letter modal
-        const modalOverlayLetter = document.getElementById('modal-overlay'); // Assuming this is the correct ID used in the HTML
+        const modalOverlayLetter = document.getElementById('modal-overlay-letter'); // Corrected ID
         const timerDisplayElement = document.getElementById('love-timer');
         const moonDateInput1 = document.getElementById('moon-date-input-1');
         const moonDateInput2 = document.getElementById('moon-date-input-2');
@@ -626,51 +246,41 @@
         const moonResult2El = document.getElementById('moon-result-2');
         const memoryGrid = document.getElementById('memory-grid');
         const galleryPlaceholder = document.getElementById('gallery-placeholder');
-        // --- Added Video Duck Elements ---
         const videoDuckContainer = document.getElementById('video-duck-container');
         const videoModal = document.getElementById('video-modal');
         const closeVideoBtn = document.getElementById('close-video-btn');
         const modalOverlayVideo = document.getElementById('modal-overlay-video');
         const videoPlayerIframe = document.getElementById('video-player-iframe');
 
-        // --- Video URL (Replace Placeholder) ---
-        // IMPORTANT: Replace this placeholder link with your actual video embed link!
-        const yourVideoUrl = "https://streamable.com/e/y50sqi?"; // Replace!
+        // --- Video URL ---
+        const yourVideoUrl = "https://streamable.com/e/y50sqi"; // Your Streamable Link
 
         // --- Love Letter Modal Logic ---
         function openLetter() { if (loveLetterModal) loveLetterModal.classList.remove('hidden'); }
         function closeLetter() { if (loveLetterModal) loveLetterModal.classList.add('hidden'); }
         if (openLetterBtn) openLetterBtn.addEventListener('click', openLetter);
         if (closeLetterBtn) closeLetterBtn.addEventListener('click', closeLetter);
-        // Check if the overlay element exists before adding listener
-        const letterOverlayElement = document.getElementById('modal-overlay-letter') || document.getElementById('modal-overlay'); // Use the ID present in the HTML
-         if (letterOverlayElement) letterOverlayElement.addEventListener('click', closeLetter);
-
+        if (modalOverlayLetter) modalOverlayLetter.addEventListener('click', closeLetter);
 
         // --- Video Modal Logic ---
         function openVideoModal() {
             let videoSrc = yourVideoUrl;
-            if (yourVideoUrl.includes("youtube.com") || yourVideoUrl.includes("youtu.be")) {
-                 videoSrc += (yourVideoUrl.includes("?") ? "&" : "?") + "autoplay=1&rel=0";
-            } else {
-                 videoSrc += "?autoplay=1";
-            }
+            if (videoSrc.includes("streamable.com")) { videoSrc += "?autoplay=1"; }
+            else if (yourVideoUrl.includes("youtube.com") || yourVideoUrl.includes("youtu.be")) { videoSrc += (yourVideoUrl.includes("?") ? "&" : "?") + "autoplay=1&rel=0"; }
             if (videoPlayerIframe) videoPlayerIframe.src = videoSrc;
             if (videoModal) videoModal.classList.remove('hidden');
         }
         function closeVideoModal() {
              if (videoModal) videoModal.classList.add('hidden');
-             // Stop the video by removing the src attribute
              if (videoPlayerIframe) videoPlayerIframe.src = "about:blank";
         }
         if (videoDuckContainer) videoDuckContainer.addEventListener('click', openVideoModal);
         if (closeVideoBtn) closeVideoBtn.addEventListener('click', closeVideoModal);
         if (modalOverlayVideo) modalOverlayVideo.addEventListener('click', closeVideoModal);
 
-
         // --- Count-Up Timer Logic ---
         const loveStartDate = new Date("Nov 20, 2024 15:30:00").getTime();
-        function updateLoveTimer() {
+        function updateLoveTimer() { /* ... unchanged ... */
             const now = new Date().getTime(); const distance = now - loveStartDate;
             const days = Math.floor(distance / (1000 * 60 * 60 * 24)); const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)); const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60)); const seconds = Math.floor((distance % (1000 * 60)) / 1000);
             const fDays = String(days).padStart(2, '0'); const fHours = String(hours).padStart(2, '0'); const fMinutes = String(minutes).padStart(2, '0'); const fSeconds = String(seconds).padStart(2, '0');
@@ -684,16 +294,15 @@
         const MOON_PHASES = [ { name: 'New Moon', emoji: '🌑' }, { name: 'Waxing Crescent', emoji: '🌒' }, { name: 'First Quarter', emoji: '🌓' }, { name: 'Waxing Gibbous', emoji: '🌔' }, { name: 'Full Moon', emoji: '🌕' }, { name: 'Waning Gibbous', emoji: '🌖' }, { name: 'Third Quarter', emoji: '🌗' }, { name: 'Waning Crescent', emoji: '🌘' }, ];
         const KNOWN_NEW_MOON = new Date('2000-01-06T18:14:00Z').getTime(); const LUNAR_CYCLE_MS = 29.530588853 * 24 * 60 * 60 * 1000;
         function getMoonPhase(date) { const targetTime = new Date(date).getTime(); const msElapsed = targetTime - KNOWN_NEW_MOON; const phase = (msElapsed % LUNAR_CYCLE_MS) / LUNAR_CYCLE_MS; const normalizedPhase = phase < 0 ? phase + 1 : phase; const phaseIndex = Math.floor((normalizedPhase * 8 + 0.5) % 8); return MOON_PHASES[phaseIndex]; }
-        function displayMoonPhase(inputElement, resultElement) {
-            if (!inputElement || !resultElement) return; // Add check
-            const dateValue = inputElement.value; if (!dateValue) { resultElement.innerHTML = `<p class="text-red-500">Select date.</p>`; return; } const dateParts = dateValue.split('-'); const selectedDate = new Date(dateParts[0], dateParts[1] - 1, dateParts[2]); const phase = getMoonPhase(selectedDate); const displayDate = selectedDate.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }); resultElement.innerHTML = ` <p class="text-gray-600 text-sm">${displayDate}:</p> <p class="text-5xl">${phase.emoji}</p> <p class="text-xl title-font text-pink-500">${phase.name}</p> `; }
+        function displayMoonPhase(inputElement, resultElement) { /* ... unchanged ... */
+             if (!inputElement || !resultElement) return; const dateValue = inputElement.value; if (!dateValue) { resultElement.innerHTML = `<p class="text-red-500">Select date.</p>`; return; } const dateParts = dateValue.split('-'); const selectedDate = new Date(dateParts[0], dateParts[1] - 1, dateParts[2]); const phase = getMoonPhase(selectedDate); const displayDate = selectedDate.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }); resultElement.innerHTML = ` <p class="text-gray-600 text-sm">${displayDate}:</p> <p class="text-5xl">${phase.emoji}</p> <p class="text-xl title-font text-pink-500">${phase.name}</p> `;
+         }
         function checkBothMoonPhases() { displayMoonPhase(moonDateInput1, moonResult1El); displayMoonPhase(moonDateInput2, moonResult2El); }
-       if (moonCheckBtn) moonCheckBtn.addEventListener('click', checkBothMoonPhases); checkBothMoonPhases(); // Run on load
+        if (moonCheckBtn) moonCheckBtn.addEventListener('click', checkBothMoonPhases); checkBothMoonPhases();
 
         // --- Polaroid Grid Loader ---
-        function loadMemoryGrid() {
-            if (!memoryGrid || !galleryPlaceholder) return; // Add check
-            memoryGrid.innerHTML = ''; memoryGrid.appendChild(galleryPlaceholder);
+        function loadMemoryGrid() { /* ... unchanged ... */
+            if (!memoryGrid || !galleryPlaceholder) return; memoryGrid.innerHTML = ''; memoryGrid.appendChild(galleryPlaceholder);
             if (ourMemoriesData.length === 0) { galleryPlaceholder.style.display = 'block'; }
             else { galleryPlaceholder.style.display = 'none'; if (galleryPlaceholder.parentNode === memoryGrid) { memoryGrid.removeChild(galleryPlaceholder); }
                 ourMemoriesData.sort(() => 0.5 - Math.random());
@@ -703,23 +312,35 @@
                     const caption = document.createElement('p'); caption.className = 'polaroid-caption'; caption.textContent = memory.caption; container.append(img, caption); memoryGrid.appendChild(container);
                 });
             }
+         }
+
+        // --- Reasons I Love You Logic ---
+        const reasonTriggers = document.querySelectorAll('.reason-trigger');
+        if (reasonTriggers) {
+            reasonTriggers.forEach(trigger => {
+                trigger.addEventListener('click', () => {
+                    const targetId = trigger.getAttribute('data-reason-target');
+                    const reasonTextElement = document.getElementById(targetId);
+                    if (reasonTextElement) {
+                        reasonTextElement.classList.toggle('revealed');
+                    }
+                });
+            });
         }
 
         // --- Animation Functions ---
-        function createHeart() { const heart = document.createElement('div'); heart.innerHTML = '&#x2764;'; heart.className = 'heart'; heart.style.left = `${Math.random() * 100}vw`; heart.style.animationDuration = `${Math.random() * 2 + 8}s`; heart.style.opacity = Math.random(); heart.style.fontSize = `${Math.random() * 10 + 10}px`; if (animationContainer) animationContainer.appendChild(heart); setTimeout(() => { heart.remove(); }, 10000); }
-        function createConfetti() { const confetti = document.createElement('div'); const type = Math.random(); if (type < 0.33) { confetti.className = 'confetti'; } else if (type < 0.66) { confetti.className = 'confetti square'; } else { confetti.className = 'confetti triangle'; } confetti.style.left = `${Math.random() * 100}vw`; const duration = Math.random() * 3 + 5; confetti.style.setProperty('--duration', `${duration}s`); confetti.style.opacity = Math.random() * 0.7 + 0.3; confetti.style.transform = `scale(${Math.random() * 0.7 + 0.3})`; if (animationContainer) animationContainer.appendChild(confetti); setTimeout(() => { confetti.remove(); }, duration * 1000 + 500); }
-        function createSparkle() { const sparkle = document.createElement('div'); sparkle.className = 'sparkle'; const size = Math.random() * 8 + 4; sparkle.style.width = `${size}px`; sparkle.style.height = `${size}px`; sparkle.style.left = `${Math.random() * 100}vw`; sparkle.style.top = `${Math.random() * 100}vh`; const duration = Math.random() * 2 + 1; sparkle.style.setProperty('--sparkle-duration', `${duration}s`); if (animationContainer) animationContainer.appendChild(sparkle); setTimeout(() => { sparkle.remove(); }, duration * 2000); }
+        function createHeart() { /* ... unchanged ... */ const heart = document.createElement('div'); heart.innerHTML = '&#x2764;'; heart.className = 'heart'; heart.style.left = `${Math.random() * 100}vw`; heart.style.animationDuration = `${Math.random() * 2 + 8}s`; heart.style.opacity = Math.random(); heart.style.fontSize = `${Math.random() * 10 + 10}px`; if (animationContainer) animationContainer.appendChild(heart); setTimeout(() => { heart.remove(); }, 10000); }
+        function createConfetti() { /* ... unchanged ... */ const confetti = document.createElement('div'); const type = Math.random(); if (type < 0.33) { confetti.className = 'confetti'; } else if (type < 0.66) { confetti.className = 'confetti square'; } else { confetti.className = 'confetti triangle'; } confetti.style.left = `${Math.random() * 100}vw`; const duration = Math.random() * 3 + 5; confetti.style.setProperty('--duration', `${duration}s`); confetti.style.opacity = Math.random() * 0.7 + 0.3; confetti.style.transform = `scale(${Math.random() * 0.7 + 0.3})`; if (animationContainer) animationContainer.appendChild(confetti); setTimeout(() => { confetti.remove(); }, duration * 1000 + 500); }
+        function createSparkle() { /* ... unchanged ... */ const sparkle = document.createElement('div'); sparkle.className = 'sparkle'; const size = Math.random() * 8 + 4; sparkle.style.width = `${size}px`; sparkle.style.height = `${size}px`; sparkle.style.left = `${Math.random() * 100}vw`; sparkle.style.top = `${Math.random() * 100}vh`; const duration = Math.random() * 2 + 1; sparkle.style.setProperty('--sparkle-duration', `${duration}s`); if (animationContainer) animationContainer.appendChild(sparkle); setTimeout(() => { sparkle.remove(); }, duration * 2000); }
 
         // --- Initial Load & Intervals ---
-        // Ensure functions only run if elements exist
         if(typeof updateLoveTimer === 'function') setInterval(updateLoveTimer, 1000);
         if(typeof createHeart === 'function') setInterval(createHeart, 500);
         if(typeof createConfetti === 'function') setInterval(createConfetti, 100);
         if(typeof createSparkle === 'function') setInterval(createSparkle, 300);
-        if(typeof loadMemoryGrid === 'function') loadMemoryGrid(); // Load the photo gallery
+        if(typeof loadMemoryGrid === 'function') loadMemoryGrid();
 
     </script>
 </body>
 </html>
-
 

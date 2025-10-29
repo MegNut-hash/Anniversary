@@ -147,7 +147,8 @@
         }
 
         /* --- Love Letter Modal CSS --- */
-        #love-letter-modal {
+        /* --- Video Modal CSS --- */
+        #love-letter-modal, #video-modal {
             transition: opacity 0.3s ease-in-out, visibility 0.3s ease-in-out;
         }
         .modal-overlay {
@@ -161,8 +162,12 @@
             transform: scale(0.95);
             opacity: 0;
             transition: transform 0.3s ease-out, opacity 0.3s ease-out;
+            position: relative; /* Ensure relative positioning */
+            border-radius: 1rem; /* Base rounding */
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
         }
-        #love-letter-modal:not(.hidden) .modal-content {
+        #love-letter-modal:not(.hidden) .modal-content,
+        #video-modal:not(.hidden) .modal-content {
             transform: scale(1);
             opacity: 1;
         }
@@ -178,6 +183,11 @@
             font-size: 24px;
             font-weight: bold;
             transition: all 0.2s ease-in-out;
+            cursor: pointer; /* Add cursor pointer */
+            position: absolute; /* Position relative to modal-content */
+            top: 0.5rem; /* Adjust position */
+            right: 0.5rem;
+            z-index: 150; /* Above content */
         }
         .modal-close-btn:hover {
             background-color: #fbcfe8;
@@ -349,13 +359,76 @@
             margin-right: auto;
         }
 
+        /* --- VIDEO DUCK CSS --- */
+        #video-duck-container {
+            position: fixed;
+            bottom: 1.5rem; /* 24px */
+            right: 1.5rem; /* 24px */
+            z-index: 50; /* Above content, below modals */
+            cursor: pointer;
+            text-align: center;
+            transition: transform 0.3s ease-in-out;
+        }
+        #video-duck-container:hover {
+            transform: scale(1.1);
+        }
+        .duck-banner {
+            background-color: #f472b6; /* Pink */
+            color: white;
+            padding: 0.25rem 0.75rem;
+            border-radius: 6px;
+            font-size: 0.75rem; /* 12px */
+            font-weight: 600;
+            font-family: 'Nunito', sans-serif;
+            margin-bottom: 0.25rem;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            display: inline-block; /* Fit content */
+        }
+        .duck-svg {
+            width: 60px; /* Adjust size as needed */
+            height: auto;
+            filter: drop-shadow(0 4px 6px rgba(0,0,0,0.1));
+        }
+
+        /* Video Modal Styles */
+        .video-modal-content {
+            /* Inherits base styles from .modal-content via classList */
+            width: 90%;
+            max-width: 800px; /* Adjust max width for video */
+            padding: 1rem; /* Less padding for video */
+            background: #fff8f8; /* Slightly different background */
+        }
+        .video-player-wrapper {
+            position: relative;
+            padding-bottom: 56.25%; /* 16:9 Aspect Ratio */
+            height: 0;
+            overflow: hidden;
+            border-radius: 10px; /* Rounded corners for player */
+            border: 2px solid #fbcfe8;
+        }
+        .video-player-wrapper iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+        /* Close button positioned inside video content - Adjusted slightly */
+        .video-modal-content .modal-close-btn {
+            top: -10px; /* Adjust position */
+            right: -10px;
+        }
+
     </style>
 </head>
 <body class="text-gray-700">
 
-    <!-- Container for floating elements (hearts, confetti, sparkles) --><div id="animation-container" class="absolute inset-0 overflow-hidden pointer-events-none"></div>
+    <!-- Container for floating elements (hearts, confetti, sparkles) -->
+    <div id="animation-container" class="absolute inset-0 overflow-hidden pointer-events-none"></div>
 
-    <!-- Heart Icon for SVG use --><svg class="hidden">
+    <!-- Heart Icon for SVG use -->
+    <svg class="hidden">
         <symbol id="icon-heart" viewBox="0 0 24 24">
             <path fill="currentColor" d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
         </symbol>
@@ -367,7 +440,8 @@
             <h1 class="title-font text-5xl md:text-7xl text-pink-500">Our Love Story</h1>
             <p class="text-lg text-gray-500 mt-2">Time, Tides & Memories</p>
 
-            <!-- === TIME TOGETHER COUNTER (Unchanged) === --><div class="mt-8">
+            <!-- === TIME TOGETHER COUNTER === -->
+            <div class="mt-8">
                 <p class="text-lg text-gray-600">Our time together:</p>
                 <h2 id="love-timer" class="text-3xl md:text-4xl font-semibold text-pink-600 mt-1" style="font-family: 'Nunito', sans-serif;">
                     Loading...
@@ -381,28 +455,24 @@
                     <span>A Letter For My Love</span>
                 </button>
             </div>
-            <!-- === END LOVE LETTER BUTTON === -->
-
         </header>
 
-        <!-- === MOON PHASE FEATURE (MODIFIED FOR TWO PICKERS) === --><section class="text-center mb-12 flex flex-col justify-center items-center gap-6 bg-white/70 backdrop-blur-sm p-8 rounded-2xl shadow-lg border border-pink-100">
+        <!-- === MOON PHASE FEATURE === -->
+        <section class="text-center mb-12 flex flex-col justify-center items-center gap-6 bg-white/70 backdrop-blur-sm p-8 rounded-2xl shadow-lg border border-pink-100">
             <h3 class="title-font text-3xl text-pink-500">Moon Phase Finder</h3>
             <p class="text-gray-600">Compare moon phases for two different dates!</p>
-
             <div class="grid grid-cols-1 md:grid-cols-2 gap-8 w-full max-w-2xl">
-                <!-- Moon Date Picker 1 --><div class="flex flex-col items-center gap-2">
+                <div class="flex flex-col items-center gap-2">
                     <label for="moon-date-input-1" class="text-lg text-gray-700">Date 1:</label>
                     <input type="date" id="moon-date-input-1" class="moon-date-input">
                     <div id="moon-result-1" class="mt-2 text-center h-28"></div>
                 </div>
-
-                <!-- Moon Date Picker 2 --><div class="flex flex-col items-center gap-2">
+                <div class="flex flex-col items-center gap-2">
                     <label for="moon-date-input-2" class="text-lg text-gray-700">Date 2:</label>
                     <input type="date" id="moon-date-input-2" class="moon-date-input">
                     <div id="moon-result-2" class="mt-2 text-center h-28"></div>
                 </div>
             </div>
-
             <button id="moon-check-btn" class="inline-flex items-center gap-3 bg-pink-400 text-white font-semibold px-8 py-3 rounded-full cursor-pointer shadow-lg hover:bg-pink-500 transition-all duration-300 transform hover:scale-105">
                 <svg class="w-6 h-6"><use xlink:href="#icon-heart"></use></svg>
                 <span>Check Moon Phases</span>
@@ -414,204 +484,103 @@
             <h3 class="title-font text-3xl text-pink-500">Our Next Adventures</h3>
             <p class="text-gray-600">A few things I can't wait to do with you...</p>
             <ul class="bucket-list mt-4 text-left max-w-md w-full">
-                <li>Go on a date in Hayes without being in fear of being spotted</li>
-                <li>Try to cook together, and when i get food posioning, watch you cook.</li>
-                <li>Go to a new country together, basically anywhere but sri lanka</li>
-                <li>Go shopping together.</li>
-                <li>Go back to the fields for nostalgia.</li>
-                <li>Boing Boing Boing 😏.</li>
+                 <li>Go on a date in Hayes without being in fear of being spotted</li>
+                 <li>Try to cook together, and when i get food posioning, watch you cook.</li>
+                 <li>Go to a new country together, basically anywhere but sri lanka</li>
+                 <li>Go shopping together.</li>
+                 <li>Go back to the fields for nostalgia.</li>
+                 <li>Boing Boing Boing 😏.</li>
             </ul>
         </section>
-        <!-- === END BUCKET LIST SECTION === -->
 
         <!-- === TIMELINE SECTION === -->
         <section id="love-timeline" class="mb-12 flex flex-col justify-center items-center gap-6 bg-white/70 backdrop-blur-sm p-8 rounded-2xl shadow-lg border border-pink-100">
-            <h3 class="title-font text-3xl text-pink-500">A Timeline of Our Love</h3>
-            <div class="timeline-container mt-4 w-full max-w-md">
-                <!-- Timeline Item 1 -->
-                <div class="timeline-item">
-                    <div class="timeline-dot"></div>
-                    <div class="timeline-content">
-                        <p class="timeline-date">November 20, 2024</p>
-                        <h4 class="timeline-title">Our Story Began</h4>
-                        <p class="timeline-desc">The day it all started... ❤️</p>
-                    </div>
-                </div>
-                <!-- Timeline Item 2 -->
-                <div class="timeline-item">
-                    <div class="timeline-dot"></div>
-                    <div class="timeline-content">
-                        <p class="timeline-date">November 21, 2024</p>
-                        <h4 class="timeline-title">MY 18TH Birthday!!1</h4>
-                        <p class="timeline-desc">The day i became a pedo.. ❤️</p>
-                    </div>
-                </div>
-                <!-- Timeline Item 4 -->
-                <div class="timeline-item">
-                    <div class="timeline-dot"></div>
-                    <div class="timeline-content">
-                        <p class="timeline-date">April 11, 2025</p>
-                        <h4 class="timeline-title">MY LIL SHEILASS 18th</h4>
-                        <p class="timeline-desc">MY LIL ADULT PRO MAX AWW! ❤️</p>
-                    </div>
-                </div>
-                <!-- Timeline Item 5 -->
-                <div class="timeline-item">
-                    <div class="timeline-dot"></div>
-                    <div class="timeline-content">
-                        <p class="timeline-date">June 24, 2025</p>
-                        <h4 class="timeline-title">PROM!</h4>
-                        <p class="timeline-desc">That unforgettable night.</p>
-                    </div>
-                </div>
-                  <!-- Timeline Item 6 -->
-                <div class="timeline-item">
-                    <div class="timeline-dot"></div>
-                    <div class="timeline-content">
-                        <p class="timeline-date">May 20 2025</p>
-                        <h4 class="timeline-title">OUR 6 MONTHS!</h4>
-                        <p class="timeline-desc">Thats when it clicked!</p>
-                    </div>
-                </div>
-                <!-- Timeline Item 7 -->
-                <div class="timeline-item">
-                    <div class="timeline-dot"></div>
-                    <div class="timeline-content">
-                        <p class="timeline-date">November 20, 2025</p>
-                        <h4 class="timeline-title">Our 1 Year Anniversary</h4>
-                        <p class="timeline-desc">And so many more to come!</p>
-                    </div>
-                </div>
-            </div>
+             <h3 class="title-font text-3xl text-pink-500">A Timeline of Our Love</h3>
+             <div class="timeline-container mt-4 w-full max-w-md">
+                 <div class="timeline-item"> <div class="timeline-dot"></div> <div class="timeline-content"> <p class="timeline-date">November 20, 2024</p> <h4 class="timeline-title">Our Story Began</h4> <p class="timeline-desc">The day it all started... ❤️</p> </div> </div>
+                 <div class="timeline-item"> <div class="timeline-dot"></div> <div class="timeline-content"> <p class="timeline-date">November 21, 2024</p> <h4 class="timeline-title">MY 18TH Birthday!!1</h4> <p class="timeline-desc">The day i became a pedo.. ❤️</p> </div> </div>
+                 <div class="timeline-item"> <div class="timeline-dot"></div> <div class="timeline-content"> <p class="timeline-date">April 11, 2025</p> <h4 class="timeline-title">MY LIL SHEILASS 18th</h4> <p class="timeline-desc">MY LIL ADULT PRO MAX AWW! ❤️</p> </div> </div>
+                 <div class="timeline-item"> <div class="timeline-dot"></div> <div class="timeline-content"> <p class="timeline-date">June 24, 2025</p> <h4 class="timeline-title">PROM!</h4> <p class="timeline-desc">That unforgettable night.</p> </div> </div>
+                 <div class="timeline-item"> <div class="timeline-dot"></div> <div class="timeline-content"> <p class="timeline-date">May 20 2025</p> <h4 class="timeline-title">OUR 6 MONTHS!</h4> <p class="timeline-desc">Thats when it clicked!</p> </div> </div>
+                 <div class="timeline-item"> <div class="timeline-dot"></div> <div class="timeline-content"> <p class="timeline-date">November 20, 2025</p> <h4 class="timeline-title">Our 1 Year Anniversary</h4> <p class="timeline-desc">And so many more to come!</p> </div> </div>
+             </div>
         </section>
-        <!-- === END TIMELINE SECTION === -->
 
         <!-- === LITTLE THINGS COUNTER === -->
         <section id="little-things" class="mb-12 flex flex-col justify-center items-center gap-6 bg-white/70 backdrop-blur-sm p-8 rounded-2xl shadow-lg border border-pink-100">
-            <h3 class="title-font text-3xl text-pink-500">Just a Few Little Things...</h3>
-            <div class="grid grid-cols-2 md:grid-cols-4 gap-6 mt-4 w-full max-w-lg">
-                <!-- Counter Item 1 -->
-                <div class="counter-item">
-                    <span class="counter-number">1</span>
-                    <span class="counter-label">Movies Watched</span>
-                </div>
-                <!-- Counter Item 2 -->
-                <div class="counter-item">
-                    <span class="counter-number">Not enough</span>
-                    <span class="counter-label">Buldak Shared</span>
-                </div>
-                <!-- Counter Item 3 -->
-                <div class="counter-item">
-                    <span class="counter-number">1 </span>
-                    <span class="counter-label">Stolen Hoodies 😉</span>
-                </div>
-                <!-- Counter Item 4 -->
-                <div class="counter-item">
-                    <span class="counter-number">∞</span>
-                    <span class="counter-label">Laughs & Smiles</span>
-                </div>
-                <!-- Counter Item 5 -->
-                <div class="counter-item">
-                    <span class="counter-number">∞</span>
-                    <span class="counter-label">"Just say you hate me" said</span>
-                </div>
-                <!-- Counter Item 6 -->
-                <div class="counter-item">
-                    <span class="counter-number">ฅ˙Ⱉ˙ฅ rawr!</span>
-                    <span class="counter-label">GRRRRRRR</span>
-                </div>
-                <!-- Counter Item 7 -->
-                <div class="counter-item">
-                    <span class="counter-number">0 🥺</span>
-                    <span class="counter-label">Amount of times i have been invited to any events at auntys house</span>
-                </div>
-                <!-- Counter Item 8 -->
-                <div class="counter-item">
-                    <span class="counter-number">Not enough</span>
-                    <span class="counter-label">Phone calls</span>
-                </div>
-            </div>
+             <h3 class="title-font text-3xl text-pink-500">Just a Few Little Things...</h3>
+             <div class="grid grid-cols-2 md:grid-cols-4 gap-6 mt-4 w-full max-w-lg">
+                 <div class="counter-item"> <span class="counter-number">1</span> <span class="counter-label">Movies Watched</span> </div>
+                 <div class="counter-item"> <span class="counter-number">Not enough</span> <span class="counter-label">Buldak Shared</span> </div>
+                 <div class="counter-item"> <span class="counter-number">1 </span> <span class="counter-label">Stolen Hoodies 😉</span> </div>
+                 <div class="counter-item"> <span class="counter-number">∞</span> <span class="counter-label">Laughs & Smiles</span> </div>
+                 <div class="counter-item"> <span class="counter-number">∞</span> <span class="counter-label">"Just say you hate me" said</span> </div>
+                 <div class="counter-item"> <span class="counter-number">ฅ˙Ⱉ˙ฅ rawr!</span> <span class="counter-label">GRRRRRRR</span> </div>
+                 <div class="counter-item"> <span class="counter-number">0 🥺</span> <span class="counter-label">Amount of times i have been invited to any events at auntys house</span> </div>
+                 <div class="counter-item"> <span class="counter-number">Not enough</span> <span class="counter-label">Phone calls</span> </div>
+             </div>
         </section>
-        <!-- === END LITTLE THINGS COUNTER === -->
 
-        <!-- === SPECIAL PLACE MAP SECTION (Updated Map) === -->
+        <!-- === SPECIAL PLACE MAP SECTION === -->
         <section id="special-place-map" class="mb-12 flex flex-col justify-center items-center gap-6 bg-white/70 backdrop-blur-sm p-8 rounded-2xl shadow-lg border border-pink-100">
-            <h3 class="title-font text-3xl text-pink-500">Our Special Place</h3>
-            <p class="text-gray-600">The theory test centre... our first date that wasnt a date 😉</p>
-
-            <!-- Updated iframe src -->
-            <iframe
-                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2481.2708660673616!2d-0.48036122241007184!3d51.544932007959545!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x48766fdc724ee11b%3A0x3a87919af11f233d!2sDVSA%20Theory%20Test%20Centre.!5e0!3m2!1sen!2suk!4v1761590734762!5m2!1sen!2suk"
-                style="border:0;"
-                allowfullscreen=""
-                loading="lazy"
-                referrerpolicy="no-referrer-when-downgrade">
-            </iframe>
+             <h3 class="title-font text-3xl text-pink-500">Our Special Place</h3>
+             <p class="text-gray-600">The theory test centre... our first date that wasnt a date 😉</p>
+             <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2481.2708660673616!2d-0.48036122241007184!3d51.544932007959545!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x48766fdc724ee11b%3A0x3a87919af11f233d!2sDVSA%20Theory%20Test%20Centre.!5e0!3m2!1sen!2suk!4v1761590734762!5m2!1sen!2suk" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
         </section>
-        <!-- === END SPECIAL PLACE MAP SECTION === -->
 
-
-        <!-- === "MASSIVE GRID" PHOTO GALLERY === -->
+        <!-- === PHOTO GALLERY === -->
         <main class="mt-16">
             <h2 class="title-font text-4xl text-pink-500 text-center mb-10">Our Memory Lane</h2>
-
             <div id="memory-grid" class="columns-1 sm:columns-2 md:columns-3 lg:columns-4 gap-6">
-
-                <div id="gallery-placeholder" class="col-span-full text-center py-20 text-gray-400" style="display: none;">
-                    <p class="text-2xl title-font">Your memories will appear here...</p>
-                    <p>Edit the script to add your first photo!</p>
-                </div>
-
-                <!-- Photos will be added here by JavaScript --></div>
+                <div id="gallery-placeholder" class="col-span-full text-center py-20 text-gray-400" style="display: none;"> <p class="text-2xl title-font">Your memories will appear here...</p> <p>Edit the script to add your first photo!</p> </div>
+                <!-- Photos added by JS -->
+            </div>
         </main>
-        <!-- === END OF PHOTO GALLERY === -->
 
-         <!-- === ANNIVERSARY MESSAGE GIF SECTION === -->
+        <!-- === ANNIVERSARY MESSAGE GIF === -->
         <div id="anniversary-message">
-            <!-- Replace this GIF URL with your chosen cutesy heart GIF! -->
             <img src="https://media0.giphy.com/media/v1.Y2lkPTc5MGI3NjExZmZ4Mm5ranBhbnB3bDM5Y3V4bG16d2dpamo3bTFieTZyNDM4OHA3aiZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/F3OHH5KL7po9qfHOJc/giphy.gif" alt="Cutesy Heart">
             <p>Happy 1 Year Anniversary, Bubs!</p>
         </div>
-        <!-- === END OF ANNIVERSARY MESSAGE === -->
-
 
         <footer class="text-center mt-16 py-6 border-t border-pink-100">
              <p class="text-pink-400 title-font text-2xl">Always & Forever</p>
         </footer>
     </div>
 
-    <!-- === LOVE LETTER MODAL HTML === -->
+    <!-- === LOVE LETTER MODAL === -->
     <div id="love-letter-modal" class="fixed inset-0 w-full h-full flex items-center justify-center z-[100] hidden" aria-labelledby="modal-title" role="dialog" aria-modal="true">
-        <!-- Overlay -->
-        <div id="modal-overlay" class="modal-overlay fixed inset-0 w-full h-full"></div>
-
-        <!-- Modal Content -->
+        <div id="modal-overlay-letter" class="modal-overlay fixed inset-0 w-full h-full"></div>
         <div class="modal-content relative w-11/12 max-w-2xl p-6 sm:p-10 rounded-2xl shadow-2xl overflow-y-auto" style="max-height: 90vh;">
-            <!-- Close Button -->
-            <button id="close-letter-btn" class="modal-close-btn absolute top-4 right-4" aria-label="Close letter">
-                &times;
-            </button>
-
-            <!-- Letter Title -->
+            <button id="close-letter-btn" class="modal-close-btn absolute top-4 right-4" aria-label="Close letter"> &times; </button>
             <h2 id="modal-title" class="title-font text-4xl text-pink-500 text-center mb-6">To My LIL SHEILAAAAA!,</h2>
-
-            <!-- Letter Body: Your personalized text -->
-            <p class="letter-text text-lg">
-                Bubs, I just wanted to start off by saying, i love you more.😊 Anyways, I just wanted to make this lil page to remind you of some of the memories we had together and we will obviously update this with more memories we make together.
-                <br><br>
-                Remembering all our prior interactions before we started dating always made me laugh, almost all interactions ( IM SORRY OKAY 😭 ). I have never gotten close with anyone like i am with you ( Dont tell kausic, you will piss him off 🤣 ). But ye, being around you always felt so simple, it was as if i never had to try be someone im not, and ever since we've started dating, its only been easier to speak my mind and be myself. Loving you is the most rewarding thing i have ever done, and I can't wait to carry on loving you, (In more then one way 😏)
-                <br><br>
-                Remember all our calls from before we started dating, and we would always talk about the dumbest stuff together. Our lil convos were the highlights of my days, and theres no one else i would rather ask my silly and dumb questions, my lil bubs 😘. (Remember when we talked about why the sky was blue 🤣, idk if you remember, but it was one of the odd convos we remember)
-                <br><br>
-                Thank you for being you. Thank you for choosing me, every single day. I love you more than all the confetti on this page, more than all the phases of the moon. Happy 1 year anniversary!🎉🎉🎉
-                <br><br>
-                From your,
-                <br>
-                <span class="title-font text-3xl text-pink-600">Lil Bubs</span>
-            </p>
+            <p class="letter-text text-lg"> Bubs, I just wanted to start off by saying, i love you more.😊 Anyways, I just wanted to make this lil page to remind you of some of the memories we had together and we will obviously update this with more memories we make together. <br><br> Remembering all our prior interactions before we started dating always made me laugh, almost all interactions ( IM SORRY OKAY 😭 ). I have never gotten close with anyone like i am with you ( Dont tell kausic, you will piss him off 🤣 ). But ye, being around you always felt so simple, it was as if i never had to try be someone im not, and ever since we've started dating, its only been easier to speak my mind and be myself. Loving you is the most rewarding thing i have ever done, and I can't wait to carry on loving you, (In more then one way 😏) <br><br> Remember all our calls from before we started dating, and we would always talk about the dumbest stuff together. Our lil convos were the highlights of my days, and theres no one else i would rather ask my silly and dumb questions, my lil bubs 😘. (Remember when we talked about why the sky was blue 🤣, idk if you remember, but it was one of the odd convos we remember) <br><br> Thank you for being you. Thank you for choosing me, every single day. I love you more than all the confetti on this page, more than all the phases of the moon. Happy 1 year anniversary!🎉🎉🎉 <br><br> From your, <br> <span class="title-font text-3xl text-pink-600">Lil Bubs</span> </p>
         </div>
     </div>
-    <!-- === END LOVE LETTER MODAL === -->
+
+    <!-- === VIDEO DUCK HTML === -->
+    <div id="video-duck-container" aria-label="Click me for a surprise video!">
+        <span class="duck-banner">Click Me!</span>
+        <svg class="duck-svg" viewBox="0 0 100 100" fill="#FFD700" xmlns="http://www.w3.org/2000/svg">
+            <ellipse cx="50" cy="65" rx="30" ry="25" fill="#FFDA63"/>
+            <circle cx="70" cy="40" r="20" fill="#FFDA63"/>
+            <path d="M85 38 C 95 35, 98 45, 88 45 Z" fill="#FFA500"/>
+            <circle cx="75" cy="35" r="3" fill="#333"/>
+            <path d="M40 60 Q 20 70, 40 80 Q 50 70, 40 60 Z" fill="#FFE48A"/>
+        </svg>
+    </div>
+
+    <!-- === VIDEO MODAL HTML === -->
+    <div id="video-modal" class="fixed inset-0 w-full h-full flex items-center justify-center z-[110] hidden" aria-labelledby="video-modal-title" role="dialog" aria-modal="true">
+        <div id="modal-overlay-video" class="modal-overlay fixed inset-0 w-full h-full"></div>
+        <div class="modal-content video-modal-content relative">
+            <button id="close-video-btn" class="modal-close-btn absolute" aria-label="Close video player"> &times; </button>
+            <div class="video-player-wrapper mt-4">
+                <iframe id="video-player-iframe" src="about:blank" title="Our Special Video" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen> </iframe>
+            </div>
+             <p id="video-modal-title" class="text-center title-font text-pink-500 text-2xl mt-3">A little surprise...</p>
+        </div>
+    </div>
 
 
     <script>
@@ -640,225 +609,114 @@
         ];
         // ##################################################################
 
+        // --- DOM Elements ---
         const animationContainer = document.getElementById('animation-container');
-
-        // --- === LOVE LETTER MODAL LOGIC === ---
         const openLetterBtn = document.getElementById('open-letter-btn');
         const closeLetterBtn = document.getElementById('close-letter-btn');
         const loveLetterModal = document.getElementById('love-letter-modal');
-        const modalOverlay = document.getElementById('modal-overlay');
-
-        function openLetter() {
-            loveLetterModal.classList.remove('hidden');
-        }
-        function closeLetter() {
-            loveLetterModal.classList.add('hidden');
-        }
-
-        openLetterBtn.addEventListener('click', openLetter);
-        closeLetterBtn.addEventListener('click', closeLetter);
-        modalOverlay.addEventListener('click', closeLetter);
-
-        // --- === COUNT-UP TIMER LOGIC (Fixed typo) === ---
-        const loveStartDate = new Date("Nov 20, 2024 15:30:00").getTime(); // SET YOUR START DATE
+        // Corrected Overlay ID for letter modal
+        const modalOverlayLetter = document.getElementById('modal-overlay'); // Assuming this is the correct ID used in the HTML
         const timerDisplayElement = document.getElementById('love-timer');
-
-        function updateLoveTimer() {
-            const now = new Date().getTime();
-            const distance = now - loveStartDate;
-            // Fixed typo: 1G000 -> 1000
-            const days = Math.floor(distance / (1000 * 60 * 60 * 24));
-            const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-            const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-            const seconds = Math.floor((distance % (1000 * 60)) / 1000);
-            const fDays = String(days).padStart(2, '0');
-            const fHours = String(hours).padStart(2, '0');
-            const fMinutes = String(minutes).padStart(2, '0');
-            const fSeconds = String(seconds).padStart(2, '0');
-            if (timerDisplayElement) {
-                timerDisplayElement.innerHTML = `${fDays}d ${fHours}h ${fMinutes}m ${fSeconds}s`;
-            }
-        }
-        setInterval(updateLoveTimer, 1000);
-        updateLoveTimer();
-
-        // --- === MOON PHASE LOGIC (Fixed typos) === ---
         const moonDateInput1 = document.getElementById('moon-date-input-1');
         const moonDateInput2 = document.getElementById('moon-date-input-2');
         const moonCheckBtn = document.getElementById('moon-check-btn');
         const moonResult1El = document.getElementById('moon-result-1');
         const moonResult2El = document.getElementById('moon-result-2');
-
-        // Set default dates
-        moonDateInput1.value = "2006-11-21";
-        moonDateInput2.value = "2007-04-11";
-
-        const MOON_PHASES = [
-            { name: 'New Moon', emoji: '🌑' },
-            { name: 'Waxing Crescent', emoji: '🌒' },
-            { name: 'First Quarter', emoji: '🌓' },
-            { name: 'Waxing Gibbous', emoji: '🌔' },
-            // Fixed typo: name:s: -> name:
-            { name: 'Full Moon', emoji: '🌕' },
-            { name: 'Waning Gibbous', emoji: '🌖' },
-            { name: 'Third Quarter', emoji: '🌗' },
-            { name: 'Waning Crescent', emoji: '🌘' },
-        ];
-        const KNOWN_NEW_MOON = new Date('2000-01-06T18:14:00Z').getTime();
-        const LUNAR_CYCLE_MS = 29.530588853 * 24 * 60 * 60 * 1000;
-
-        function getMoonPhase(date) {
-            const targetTime = new Date(date).getTime();
-            const msElapsed = targetTime - KNOWN_NEW_MOON;
-            const phase = (msElapsed % LUNAR_CYCLE_MS) / LUNAR_CYCLE_MS;
-            const normalizedPhase = phase < 0 ? phase + 1 : phase;
-            const phaseIndex = Math.floor((normalizedPhase * 8 + 0.5) % 8);
-            return MOON_PHASES[phaseIndex];
-        }
-
-        function displayMoonPhase(inputElement, resultElement) {
-            const dateValue = inputElement.value;
-            if (!dateValue) {
-                // Fixed typo: class" -> class="
-                resultElement.innerHTML = `<p class="text-red-500">Select date.</p>`;
-                return;
-            }
-            const dateParts = dateValue.split('-');
-            const selectedDate = new Date(dateParts[0], dateParts[1] - 1, dateParts[2]);
-            const phase = getMoonPhase(selectedDate);
-            const displayDate = selectedDate.toLocaleDateString('en-US', {
-                year: 'numeric',
-                month: 'long',
-                day: 'numeric'
-            });
-            resultElement.innerHTML = `
-                <p class="text-gray-600 text-sm">${displayDate}:</p>
-                <p class="text-5xl">${phase.emoji}</p>
-                <p class="text-xl title-font text-pink-500">${phase.name}</p>
-            `;
-        }
-
-        // Function to check both moon phases
-        function checkBothMoonPhases() {
-            displayMoonPhase(moonDateInput1, moonResult1El);
-            displayMoonPhase(moonDateInput2, moonResult2El);
-        }
-
-        moonCheckBtn.addEventListener('click', checkBothMoonPhases);
-
-        // Initially display moon phases for default dates
-        checkBothMoonPhases();
-
-        // --- === POLAROID GRID LOADER (Unchanged) === ---
         const memoryGrid = document.getElementById('memory-grid');
         const galleryPlaceholder = document.getElementById('gallery-placeholder');
+        // --- Added Video Duck Elements ---
+        const videoDuckContainer = document.getElementById('video-duck-container');
+        const videoModal = document.getElementById('video-modal');
+        const closeVideoBtn = document.getElementById('close-video-btn');
+        const modalOverlayVideo = document.getElementById('modal-overlay-video');
+        const videoPlayerIframe = document.getElementById('video-player-iframe');
 
-        function loadMemoryGrid() {
-            // Clear existing grid items before loading new ones
-            memoryGrid.innerHTML = '';
-            // Re-append placeholder temporarily if needed, though logic below handles it
-            memoryGrid.appendChild(galleryPlaceholder);
+        // --- Video URL (Replace Placeholder) ---
+        // IMPORTANT: Replace this placeholder link with your actual video embed link!
+        const yourVideoUrl = "https://streamable.com/e/y50sqi?"; // Replace!
 
-            if (ourMemoriesData.length === 0) {
-                galleryPlaceholder.style.display = 'block';
+        // --- Love Letter Modal Logic ---
+        function openLetter() { if (loveLetterModal) loveLetterModal.classList.remove('hidden'); }
+        function closeLetter() { if (loveLetterModal) loveLetterModal.classList.add('hidden'); }
+        if (openLetterBtn) openLetterBtn.addEventListener('click', openLetter);
+        if (closeLetterBtn) closeLetterBtn.addEventListener('click', closeLetter);
+        // Check if the overlay element exists before adding listener
+        const letterOverlayElement = document.getElementById('modal-overlay-letter') || document.getElementById('modal-overlay'); // Use the ID present in the HTML
+         if (letterOverlayElement) letterOverlayElement.addEventListener('click', closeLetter);
+
+
+        // --- Video Modal Logic ---
+        function openVideoModal() {
+            let videoSrc = yourVideoUrl;
+            if (yourVideoUrl.includes("youtube.com") || yourVideoUrl.includes("youtu.be")) {
+                 videoSrc += (yourVideoUrl.includes("?") ? "&" : "?") + "autoplay=1&rel=0";
             } else {
-                galleryPlaceholder.style.display = 'none';
-                 // Ensure placeholder is removed if data exists
-                if (galleryPlaceholder.parentNode === memoryGrid) {
-                     memoryGrid.removeChild(galleryPlaceholder);
-                }
+                 videoSrc += "?autoplay=1";
+            }
+            if (videoPlayerIframe) videoPlayerIframe.src = videoSrc;
+            if (videoModal) videoModal.classList.remove('hidden');
+        }
+        function closeVideoModal() {
+             if (videoModal) videoModal.classList.add('hidden');
+             // Stop the video by removing the src attribute
+             if (videoPlayerIframe) videoPlayerIframe.src = "about:blank";
+        }
+        if (videoDuckContainer) videoDuckContainer.addEventListener('click', openVideoModal);
+        if (closeVideoBtn) closeVideoBtn.addEventListener('click', closeVideoModal);
+        if (modalOverlayVideo) modalOverlayVideo.addEventListener('click', closeVideoModal);
 
-                ourMemoriesData.sort(() => 0.5 - Math.random()); // Shuffle photos
+
+        // --- Count-Up Timer Logic ---
+        const loveStartDate = new Date("Nov 20, 2024 15:30:00").getTime();
+        function updateLoveTimer() {
+            const now = new Date().getTime(); const distance = now - loveStartDate;
+            const days = Math.floor(distance / (1000 * 60 * 60 * 24)); const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)); const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60)); const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+            const fDays = String(days).padStart(2, '0'); const fHours = String(hours).padStart(2, '0'); const fMinutes = String(minutes).padStart(2, '0'); const fSeconds = String(seconds).padStart(2, '0');
+            if (timerDisplayElement) { timerDisplayElement.innerHTML = `${fDays}d ${fHours}h ${fMinutes}m ${fSeconds}s`; }
+        }
+        setInterval(updateLoveTimer, 1000); updateLoveTimer();
+
+        // --- Moon Phase Logic ---
+        if(moonDateInput1) moonDateInput1.value = "2006-11-21";
+        if(moonDateInput2) moonDateInput2.value = "2007-04-11";
+        const MOON_PHASES = [ { name: 'New Moon', emoji: '🌑' }, { name: 'Waxing Crescent', emoji: '🌒' }, { name: 'First Quarter', emoji: '🌓' }, { name: 'Waxing Gibbous', emoji: '🌔' }, { name: 'Full Moon', emoji: '🌕' }, { name: 'Waning Gibbous', emoji: '🌖' }, { name: 'Third Quarter', emoji: '🌗' }, { name: 'Waning Crescent', emoji: '🌘' }, ];
+        const KNOWN_NEW_MOON = new Date('2000-01-06T18:14:00Z').getTime(); const LUNAR_CYCLE_MS = 29.530588853 * 24 * 60 * 60 * 1000;
+        function getMoonPhase(date) { const targetTime = new Date(date).getTime(); const msElapsed = targetTime - KNOWN_NEW_MOON; const phase = (msElapsed % LUNAR_CYCLE_MS) / LUNAR_CYCLE_MS; const normalizedPhase = phase < 0 ? phase + 1 : phase; const phaseIndex = Math.floor((normalizedPhase * 8 + 0.5) % 8); return MOON_PHASES[phaseIndex]; }
+        function displayMoonPhase(inputElement, resultElement) {
+            if (!inputElement || !resultElement) return; // Add check
+            const dateValue = inputElement.value; if (!dateValue) { resultElement.innerHTML = `<p class="text-red-500">Select date.</p>`; return; } const dateParts = dateValue.split('-'); const selectedDate = new Date(dateParts[0], dateParts[1] - 1, dateParts[2]); const phase = getMoonPhase(selectedDate); const displayDate = selectedDate.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }); resultElement.innerHTML = ` <p class="text-gray-600 text-sm">${displayDate}:</p> <p class="text-5xl">${phase.emoji}</p> <p class="text-xl title-font text-pink-500">${phase.name}</p> `; }
+        function checkBothMoonPhases() { displayMoonPhase(moonDateInput1, moonResult1El); displayMoonPhase(moonDateInput2, moonResult2El); }
+       if (moonCheckBtn) moonCheckBtn.addEventListener('click', checkBothMoonPhases); checkBothMoonPhases(); // Run on load
+
+        // --- Polaroid Grid Loader ---
+        function loadMemoryGrid() {
+            if (!memoryGrid || !galleryPlaceholder) return; // Add check
+            memoryGrid.innerHTML = ''; memoryGrid.appendChild(galleryPlaceholder);
+            if (ourMemoriesData.length === 0) { galleryPlaceholder.style.display = 'block'; }
+            else { galleryPlaceholder.style.display = 'none'; if (galleryPlaceholder.parentNode === memoryGrid) { memoryGrid.removeChild(galleryPlaceholder); }
+                ourMemoriesData.sort(() => 0.5 - Math.random());
                 ourMemoriesData.forEach(memory => {
-                    const container = document.createElement('div');
-                    container.className = 'polaroid';
-                    const rotation = Math.random() * 4 - 2; // Random tilt -2 to +2 degrees
-                    container.style.transform = `rotate(${rotation}deg)`;
-
-                    const img = document.createElement('img');
-                    img.src = memory.image;
-                    img.alt = memory.caption;
-                    // Add fallback image more reliably
-                    img.onerror = () => {
-                        console.error("Failed to load image:", memory.image); // Log error
-                        img.src = 'https://placehold.co/400x400/fce7f3/db2777?text=Image+Missing';
-                        img.alt = 'Image failed to load';
-                    };
-
-                    const caption = document.createElement('p');
-                    caption.className = 'polaroid-caption';
-                    caption.textContent = memory.caption;
-
-                    container.append(img, caption);
-                    memoryGrid.appendChild(container);
+                    const container = document.createElement('div'); container.className = 'polaroid'; const rotation = Math.random() * 4 - 2; container.style.transform = `rotate(${rotation}deg)`;
+                    const img = document.createElement('img'); img.src = memory.image; img.alt = memory.caption; img.onerror = () => { console.error("Failed to load image:", memory.image); img.src = 'https://placehold.co/400x400/fce7f3/db2777?text=Image+Missing'; img.alt = 'Image failed to load'; };
+                    const caption = document.createElement('p'); caption.className = 'polaroid-caption'; caption.textContent = memory.caption; container.append(img, caption); memoryGrid.appendChild(container);
                 });
             }
         }
 
+        // --- Animation Functions ---
+        function createHeart() { const heart = document.createElement('div'); heart.innerHTML = '&#x2764;'; heart.className = 'heart'; heart.style.left = `${Math.random() * 100}vw`; heart.style.animationDuration = `${Math.random() * 2 + 8}s`; heart.style.opacity = Math.random(); heart.style.fontSize = `${Math.random() * 10 + 10}px`; if (animationContainer) animationContainer.appendChild(heart); setTimeout(() => { heart.remove(); }, 10000); }
+        function createConfetti() { const confetti = document.createElement('div'); const type = Math.random(); if (type < 0.33) { confetti.className = 'confetti'; } else if (type < 0.66) { confetti.className = 'confetti square'; } else { confetti.className = 'confetti triangle'; } confetti.style.left = `${Math.random() * 100}vw`; const duration = Math.random() * 3 + 5; confetti.style.setProperty('--duration', `${duration}s`); confetti.style.opacity = Math.random() * 0.7 + 0.3; confetti.style.transform = `scale(${Math.random() * 0.7 + 0.3})`; if (animationContainer) animationContainer.appendChild(confetti); setTimeout(() => { confetti.remove(); }, duration * 1000 + 500); }
+        function createSparkle() { const sparkle = document.createElement('div'); sparkle.className = 'sparkle'; const size = Math.random() * 8 + 4; sparkle.style.width = `${size}px`; sparkle.style.height = `${size}px`; sparkle.style.left = `${Math.random() * 100}vw`; sparkle.style.top = `${Math.random() * 100}vh`; const duration = Math.random() * 2 + 1; sparkle.style.setProperty('--sparkle-duration', `${duration}s`); if (animationContainer) animationContainer.appendChild(sparkle); setTimeout(() => { sparkle.remove(); }, duration * 2000); }
 
-        // --- Cute Floating Hearts (Unchanged) ---
-        function createHeart() {
-            const heart = document.createElement('div');
-            heart.innerHTML = '&#x2764;';
-            heart.className = 'heart';
-            heart.style.left = `${Math.random() * 100}vw`;
-            heart.style.animationDuration = `${Math.random() * 2 + 8}s`;
-            heart.style.opacity = Math.random();
-            heart.style.fontSize = `${Math.random() * 10 + 10}px`;
-            animationContainer.appendChild(heart);
-            setTimeout(() => { heart.remove(); }, 10000);
-        }
-
-        // --- Confetti Rain ---
-        function createConfetti() {
-            const confetti = document.createElement('div');
-            const type = Math.random();
-            if (type < 0.33) {
-                confetti.className = 'confetti'; // Circle
-            } else if (type < 0.66) {
-                confetti.className = 'confetti square';
-            } else {
-                confetti.className = 'confetti triangle';
-            }
-            confetti.style.left = `${Math.random() * 100}vw`;
-            // Add --duration variable for CSS
-            confetti.style.setProperty('--duration', `${Math.random() * 3 + 5}s`);
-            confetti.style.opacity = Math.random() * 0.7 + 0.3;
-            confetti.style.transform = `scale(${Math.random() * 0.7 + 0.3})`; // size
-            animationContainer.appendChild(confetti);
-            // Use animation duration + buffer for removal
-            setTimeout(() => { confetti.remove(); }, parseFloat(confetti.style.getPropertyValue('--duration')) * 1000 + 500);
-        }
-
-
-        // --- Sparkles ---
-        function createSparkle() {
-            const sparkle = document.createElement('div');
-            sparkle.className = 'sparkle';
-            const size = Math.random() * 8 + 4; // 4px to 12px
-            sparkle.style.width = `${size}px`;
-            sparkle.style.height = `${size}px`;
-            sparkle.style.left = `${Math.random() * 100}vw`;
-            sparkle.style.top = `${Math.random() * 100}vh`;
-            sparkle.style.setProperty('--sparkle-duration', `${Math.random() * 2 + 1}s`); // 1-3 seconds
-            animationContainer.appendChild(sparkle);
-            // Use animation duration * 2 for removal (allows a full cycle)
-            setTimeout(() => { sparkle.remove(); }, parseFloat(sparkle.style.getPropertyValue('--sparkle-duration')) * 2000);
-        }
-
-
-        // --- Initial Load ---
-        setInterval(createHeart, 500); // Hearts every 0.5 seconds
-        setInterval(createConfetti, 100); // Confetti every 0.1 seconds (for "rain")
-        setInterval(createSparkle, 300); // Sparkles every 0.3 seconds
-        loadMemoryGrid(); // Load the photo gallery
+        // --- Initial Load & Intervals ---
+        // Ensure functions only run if elements exist
+        if(typeof updateLoveTimer === 'function') setInterval(updateLoveTimer, 1000);
+        if(typeof createHeart === 'function') setInterval(createHeart, 500);
+        if(typeof createConfetti === 'function') setInterval(createConfetti, 100);
+        if(typeof createSparkle === 'function') setInterval(createSparkle, 300);
+        if(typeof loadMemoryGrid === 'function') loadMemoryGrid(); // Load the photo gallery
 
     </script>
 </body>
 </html>
-
-
-
-
-
 
